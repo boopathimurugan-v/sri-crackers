@@ -52,7 +52,7 @@
                                 <td class="text-end fw-bold pt-3">₹{{ number_format($order->subtotal, 2) }}</td>
                             </tr>
                             <tr>
-                                <td colspan="3" class="text-end text-muted pb-3">GST (18%):</td>
+                                <td colspan="3" class="text-end text-muted pb-3">GST:</td>
                                 <td class="text-end fw-bold pb-3">₹{{ number_format($order->gst_amount, 2) }}</td>
                             </tr>
                             <tr class="bg-light rounded">

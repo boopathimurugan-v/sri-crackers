@@ -113,15 +113,6 @@
                         <i data-lucide="shopping-cart" class="w-5 h-5"></i>
                         {{ $product->stock > 0 ? 'Add to Cart' : 'Out of Stock' }}
                     </button>
-                    @auth
-                        <button @click="addToWishlist({{ $product->id }})" class="w-14 flex-shrink-0 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl flex items-center justify-center transition">
-                            <i data-lucide="heart" class="w-5 h-5"></i>
-                        </button>
-                    @else
-                        <a href="{{ route('login') }}" class="w-14 flex-shrink-0 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl flex items-center justify-center transition">
-                            <i data-lucide="heart" class="w-5 h-5"></i>
-                        </a>
-                    @endauth
                 </div>
             </div>
         </div>
@@ -155,6 +146,50 @@
     </div>
 </div>
 
+<div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl border border-slate-200/80 transition-all duration-300 flex flex-col justify-between group">
+    <div class="relative overflow-hidden bg-slate-100 aspect-square">
+        <img :src="product.image" :alt="product.name" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+        
+        <span class="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wider shadow">
+            <span x-text="`${product.discount}% OFF`"></span>
+        </span>
+
+        <!-- Quick Actions Overlay -->
+        <div class="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <button class="p-2 bg-white/90 backdrop-blur-md rounded-full text-slate-700 hover:text-red-600 shadow-md transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="p-5 flex-1 flex flex-col justify-between">
+        <div>
+            <h3 class="font-bold text-slate-900 text-base leading-snug group-hover:text-red-600 transition" x-text="product.name"></h3>
+            
+            <div class="flex items-baseline gap-2 mt-2">
+                <span class="text-xl font-black text-red-600" x-text="`₹${product.offerPrice}`"></span>
+                <span class="text-xs text-slate-400 line-through" x-text="`₹${product.mrp}`"></span>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-3 border-t border-slate-100">
+            <div class="flex items-center gap-2" x-show="getQty(product.id) === 0">
+                <button @click="updateQty(product.id, 1)" class="w-full py-2.5 rounded-xl bg-slate-900 hover:bg-red-600 text-white font-bold text-xs transition shadow-sm">
+                    Add To Cart
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between gap-2" x-show="getQty(product.id) > 0">
+                <div class="flex items-center border border-slate-300 rounded-xl overflow-hidden bg-slate-50 w-full justify-between">
+                    <button @click="updateQty(product.id, -1)" class="px-3 py-1.5 text-slate-600 hover:bg-slate-200 transition font-bold text-sm">-</button>
+                    <span class="text-sm font-bold text-slate-800" x-text="getQty(product.id)"></span>
+                    <button @click="updateQty(product.id, 1)" class="px-3 py-1.5 text-slate-600 hover:bg-slate-200 transition font-bold text-sm">+</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {!! '<!-- Schema.org Product JSON-LD -->' !!}
 <script type="application/ld+json">
 {
@@ -182,20 +217,4 @@
 }
 </script>
 
-<script>
-    function addToWishlist(productId) {
-        fetch('{{ route("customer.wishlist.store") }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            body: JSON.stringify({ product_id: productId })
-        }).then(response => {
-            if (response.ok) {
-                alert('Added to wishlist!');
-            }
-        });
-    }
-</script>
 @endsection

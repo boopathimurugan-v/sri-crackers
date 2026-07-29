@@ -1,281 +1,205 @@
 @extends('layouts.store')
 
-@section('title', 'Homepage')
+@section('title', 'Sivakasi Fireworks - Direct Factory Price')
 
 @section('content')
 
-{!! '<!-- Hero Section -->' !!}
-@if($banner)
-<section id="home" class="relative overflow-hidden bg-gradient-to-b from-amber-100/60 via-amber-50/20 to-white pt-12 pb-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-            
-            {!! '<!-- Left Content -->' !!}
-            <div class="space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full">
-                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i> 100% Safe & Certified Green Crackers
-                </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                    {{ $banner->title }}
-                </h1>
+    <!-- ==========================================
+         1. HERO BANNER
+         ========================================== -->
+    <section class="relative bg-black w-full overflow-hidden">
+        @if($banners->count() > 0)
+            @php $banner = $banners->first(); @endphp
+            <div class="relative w-full h-[500px] md:h-[600px]">
+                <img src="{{ $banner->image_path }}" alt="Banner" class="w-full h-full object-cover opacity-60">
+                <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent"></div>
                 
-                @if($banner->link)
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-                    <a href="{{ $banner->link }}" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-red-200 transition text-center">
-                        Explore Now
-                    </a>
-                </div>
-                @endif
-            </div>
+                <div class="absolute inset-0 flex items-center">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col md:flex-row items-center justify-between">
+                        
+                        <div class="max-w-xl text-left">
+                            <h1 class="text-5xl md:text-7xl font-black text-white leading-tight uppercase mb-4 drop-shadow-lg">
+                                Sivakasi Original<br><span class="text-[#FFC000]">Crackers</span>
+                            </h1>
+                            <p class="text-lg md:text-xl text-gray-200 mb-8 font-medium">Factory Direct Price • Up to 80% Discount • Eco Friendly Green Crackers</p>
+                            
+                            <div class="flex gap-4">
+                                <a href="#quick-order" class="bg-[#FFC000] text-slate-900 px-8 py-3 rounded-md font-black uppercase tracking-wider hover:bg-[#e5ac00] shadow-lg transition-colors">
+                                    Shop Now
+                                </a>
+                                <a href="{{ url('/price-list') }}" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-md font-bold uppercase tracking-wider hover:bg-white hover:text-black shadow-lg transition-colors">
+                                    View Price List
+                                </a>
+                            </div>
+                        </div>
 
-            {!! '<!-- Right Visual Card -->' !!}
-            <div class="relative">
-                <img src="{{ Storage::url($banner->image) }}" alt="{{ $banner->title }}" class="rounded-3xl shadow-2xl relative z-10 w-full object-cover" style="max-height: 400px;">
-            </div>
-
-        </div>
-    </div>
-</section>
-@else
-<section id="home" class="relative overflow-hidden bg-gradient-to-b from-amber-100/60 via-amber-50/20 to-white pt-12 pb-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-            
-            {!! '<!-- Left Content -->' !!}
-            <div class="space-y-6 text-center lg:text-left">
-                <div class="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 text-amber-800 text-xs font-bold px-3 py-1.5 rounded-full">
-                    <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i> 100% Safe & Certified Green Crackers
-                </div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
-                    Brighten Your Celebrations with <span class="text-red-600">Sri Crackers</span>
-                </h1>
-                <p class="text-lg text-slate-600 max-w-xl mx-auto lg:mx-0">
-                    Directly sourced from Sivakasi. Premium quality, best market prices, and safe delivery for all your festive occasions.
-                </p>
-                
-                <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
-                    <a href="#pricelist" class="bg-red-600 hover:bg-red-700 text-white font-bold px-8 py-3.5 rounded-xl shadow-lg shadow-red-200 transition text-center">
-                        Download Price List
-                    </a>
-                    <a href="#combos" class="bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 font-bold px-8 py-3.5 rounded-xl shadow-sm transition text-center">
-                        View Combo Packs
-                    </a>
-                </div>
-
-                {!! '<!-- Quick Trust Badges -->' !!}
-                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-amber-200/60">
-                    <div>
-                        <h4 class="font-extrabold text-slate-900 text-lg">100%</h4>
-                        <p class="text-xs text-slate-500">Original Sivakasi</p>
-                    </div>
-                    <div>
-                        <h4 class="font-extrabold text-slate-900 text-lg">80% OFF</h4>
-                        <p class="text-xs text-slate-500">Factory Discount</p>
-                    </div>
-                    <div>
-                        <h4 class="font-extrabold text-slate-900 text-lg">Safe</h4>
-                        <p class="text-xs text-slate-500">Green Crackers</p>
-                    </div>
-                </div>
-            </div>
-
-            {!! '<!-- Right Visual Card -->' !!}
-            <div class="relative">
-                <div class="bg-gradient-to-tr from-red-600 to-amber-500 p-8 rounded-3xl shadow-2xl text-white relative z-10 overflow-hidden">
-                    <div class="absolute top-0 right-0 opacity-10 text-9xl font-black">✨</div>
-                    <span class="bg-amber-300 text-red-950 font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">
-                        Bestseller Package
-                    </span>
-                    <h3 class="text-3xl font-extrabold mt-4 mb-2">Mega Family Cracker Box</h3>
-                    <p class="text-amber-100 text-sm mb-6">45 Premium Crackers items included for complete family entertainment.</p>
-                    <div class="flex items-baseline gap-3 mb-6">
-                        <span class="text-4xl font-black">₹2,499</span>
-                        <span class="text-amber-200 line-through text-lg">₹5,000</span>
-                    </div>
-                    <button @click="addToCart({ name: 'Mega Family Cracker Box', category: 'Combo Packs', price: 2499 })" class="w-full bg-white text-red-600 font-black py-3.5 rounded-xl hover:bg-amber-50 shadow-md transition transform active:scale-95">
-                        Order Combo Pack Now
-                    </button>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
-@endif
-
-{!! '<!-- Features Bar -->' !!}
-<section class="bg-white border-y border-slate-100 py-8">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="flex items-center gap-4 p-4 rounded-xl bg-amber-50/50 border border-amber-100">
-            <i data-lucide="shield-check" class="w-8 h-8 text-red-600"></i>
-            <div>
-                <h5 class="font-bold text-slate-800">Certified Quality</h5>
-                <p class="text-xs text-slate-500">100% Eco-friendly green crackers</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-4 p-4 rounded-xl bg-amber-50/50 border border-amber-100">
-            <i data-lucide="truck" class="w-8 h-8 text-red-600"></i>
-            <div>
-                <h5 class="font-bold text-slate-800">Prompt Transport</h5>
-                <p class="text-xs text-slate-500">Delivered directly from factory hubs</p>
-            </div>
-        </div>
-        <div class="flex items-center gap-4 p-4 rounded-xl bg-amber-50/50 border border-amber-100">
-            <i data-lucide="phone" class="w-8 h-8 text-red-600"></i>
-            <div>
-                <h5 class="font-bold text-slate-800">Direct Support</h5>
-                <p class="text-xs text-slate-500">Instant WhatsApp & phone ordering</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-{!! '<!-- Dynamic Product Sections -->' !!}
-
-{!! '<!-- Featured Products Section -->' !!}
-@if(count($featuredProducts) > 0)
-<section class="py-16 bg-slate-50/50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-end mb-10">
-            <div>
-                <h2 class="text-3xl font-extrabold text-slate-900">Featured Products</h2>
-                <p class="text-slate-500 text-sm mt-1">Our top picks and best sellers for the season</p>
-            </div>
-            <a href="{{ url('/categories') }}" class="text-red-600 font-bold text-sm hover:underline">View All →</a>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($featuredProducts as $prod)
-                <x-product-card :product="$prod" />
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
-
-{!! '<!-- Trending Products Section -->' !!}
-@if(count($trendingProducts) > 0)
-<section class="py-16 bg-white border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-end mb-10">
-            <div>
-                <h2 class="text-3xl font-extrabold text-slate-900">Trending Now</h2>
-                <p class="text-slate-500 text-sm mt-1">What everyone is buying right now</p>
-            </div>
-            <a href="{{ url('/categories') }}" class="text-red-600 font-bold text-sm hover:underline">View All →</a>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($trendingProducts as $prod)
-                <x-product-card :product="$prod" />
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
-
-{!! '<!-- Latest Products Section -->' !!}
-@if(count($latestProducts) > 0)
-<section class="py-16 bg-slate-50/50 border-t border-slate-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-end mb-10">
-            <div>
-                <h2 class="text-3xl font-extrabold text-slate-900">New Arrivals</h2>
-                <p class="text-slate-500 text-sm mt-1">Check out our latest additions</p>
-            </div>
-            <a href="{{ url('/categories') }}" class="text-red-600 font-bold text-sm hover:underline">View All →</a>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            @foreach($latestProducts as $prod)
-                <x-product-card :product="$prod" />
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
-
-{!! '<!-- Festival Offers Section -->' !!}
-@if(count($festivalOffers) > 0)
-<section class="py-16 bg-amber-50 border-t border-amber-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-end mb-10">
-            <div>
-                <h2 class="text-3xl font-extrabold text-slate-900">Festival Special Offers</h2>
-                <p class="text-amber-700 text-sm mt-1 font-bold">Limited time deals for the upcoming festival</p>
-            </div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($festivalOffers as $offer)
-                <div class="bg-white rounded-2xl border border-amber-200 overflow-hidden shadow-sm flex flex-col relative">
-                    <div class="absolute top-4 right-4 z-20">
-                        <span class="bg-red-600 text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                            {{ $offer->discount_percentage }}% OFF
-                        </span>
-                    </div>
-                    <div class="h-40 bg-amber-100/50 flex items-center justify-center relative overflow-hidden">
-                        @if($offer->image)
-                            <img src="{{ Storage::url($offer->image) }}" class="w-full h-full object-cover">
-                        @else
-                            <span class="text-6xl">🎁</span>
-                        @endif
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-bold text-slate-800 text-xl leading-snug mb-2">{{ $offer->title }}</h4>
-                            <p class="text-slate-600 text-sm line-clamp-3">{{ $offer->description }}</p>
+                        <div class="hidden md:block">
+                            <!-- Floating Offer Card -->
+                            <div class="bg-[#910A67] p-8 rounded-xl shadow-[0_20px_50px_rgba(145,10,103,0.5)] border-2 border-[#FFC000] animate-bounce-slow transform rotate-3">
+                                <h3 class="text-[#FFC000] text-xl font-black uppercase tracking-widest text-center mb-2">Festival Sale</h3>
+                                <div class="text-white text-6xl font-black text-center leading-none">80%</div>
+                                <div class="text-[#FFC000] text-3xl font-black text-center mt-1 uppercase">OFF</div>
+                                <div class="mt-4 pt-4 border-t border-pink-800 text-white font-bold text-center uppercase tracking-wider text-sm">
+                                    100% Original <br> Safe Delivery
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
-
-{!! '<!-- Category Sections -->' !!}
-@foreach($categories as $categoryName)
-    @php
-        // Filter products for this specific category
-        $categoryProducts = collect($allProducts)->where('category', $categoryName)->all();
-    @endphp
-
-    @if(count($categoryProducts) > 0)
-    <section class="py-16 {{ $loop->iteration % 2 == 0 ? 'bg-white' : 'bg-slate-50/50' }} border-t border-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-end mb-10">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-slate-900">{{ $categoryName }}</h2>
-                    <p class="text-slate-500 text-sm mt-1">Explore our wide range of {{ strtolower($categoryName) }}</p>
-                </div>
-                <a href="{{ url('/categories?category=' . urlencode($categoryName)) }}" class="text-red-600 font-bold text-sm hover:underline">View All {{ $categoryName }} →</a>
             </div>
+        @endif
+    </section>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                @foreach($categoryProducts as $prod)
-                    <x-product-card :product="$prod" />
+    <!-- ==========================================
+         FEATURED BRANDS
+         ========================================== -->
+    <section class="py-12 bg-gray-50 border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-black text-slate-900 uppercase tracking-wide mb-8 text-center border-b-2 border-[#FFC000] pb-2 inline-block">Top Brands</h2>
+            <div class="flex flex-wrap justify-center gap-8">
+                @foreach($brands as $brand)
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer flex flex-col items-center justify-center w-32 h-32 md:w-48 md:h-48">
+                        <img src="{{ $brand->logo_path }}" alt="{{ $brand->name }}" class="w-full h-auto object-contain">
+                        <span class="mt-4 font-bold text-slate-700 text-sm uppercase text-center">{{ $brand->name }}</span>
+                    </div>
                 @endforeach
             </div>
         </div>
     </section>
-    @endif
-@endforeach
 
-{!! '<!-- Combos Section -->' !!}
-@if(count($combos) > 0)
-<section id="combos" class="py-16 bg-gradient-to-b from-amber-50 to-white border-t border-amber-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-end mb-10">
-            <div>
-                <h2 class="text-3xl font-extrabold text-slate-900">Family Combo Packs</h2>
-                <p class="text-slate-500 text-sm mt-1">Maximum fun, unbeatable value packages</p>
+    <!-- ==========================================
+         2. QUICK ORDER SECTION
+         ========================================== -->
+    <section id="quick-order" class="py-16 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-black text-slate-900 uppercase">Quick Order Calculator</h2>
+                <p class="text-slate-500 font-medium mt-2">Select quantity and instantly know your savings.</p>
             </div>
-            <a href="{{ url('/combos') }}" class="text-red-600 font-bold text-sm hover:underline">View All Combos →</a>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                
+                <!-- Left: Products Grid (Grouped by Category) -->
+                <div class="w-full lg:w-3/4">
+                    @foreach($categories as $category)
+                        @if($category->products->count() > 0)
+                            <div class="mb-10">
+                                <h3 class="bg-[#FFC000] text-slate-900 text-xl font-black px-4 py-2 uppercase rounded-t-md border-b-4 border-[#910A67] shadow-sm">
+                                    {{ $category->name }}
+                                </h3>
+                                <div class="bg-white border border-gray-200 border-t-0 rounded-b-md shadow-sm overflow-hidden">
+                                    
+                                    <!-- Table Header (Desktop) -->
+                                    <div class="hidden md:grid grid-cols-12 gap-4 bg-gray-50 p-4 border-b border-gray-200 font-bold text-sm text-slate-600 uppercase tracking-wider">
+                                        <div class="col-span-2">Image</div>
+                                        <div class="col-span-4">Product Name</div>
+                                        <div class="col-span-2 text-center">MRP</div>
+                                        <div class="col-span-2 text-center">Offer Price</div>
+                                        <div class="col-span-2 text-center">Quantity</div>
+                                    </div>
+
+                                    <!-- Product Rows -->
+                                    @foreach($category->products as $product)
+                                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center border-b border-gray-100 last:border-0 hover:bg-pink-50/30 transition-colors">
+                                            
+                                            <div class="col-span-1 md:col-span-2">
+                                                <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden border border-gray-200 bg-white">
+                                                    <img src="{{ $product->main_image ?: $product->image_path }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
+                                                    <div class="absolute top-0 left-0 bg-[#910A67] text-white text-[9px] font-black px-1.5 py-0.5 rounded-br-md">
+                                                        {{ $product->discount_percentage }}% OFF
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-span-1 md:col-span-4 flex flex-col">
+                                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</span>
+                                                <h4 class="font-black text-slate-900 text-base leading-snug">{{ $product->name }}</h4>
+
+                                            </div>
+                                            
+                                            <div class="col-span-1 md:col-span-2 text-left md:text-center">
+                                                <span class="md:hidden text-xs text-gray-500 font-bold uppercase mr-2">MRP:</span>
+                                                <span class="text-gray-400 font-bold line-through">₹{{ number_format($product->mrp, 2) }}</span>
+                                            </div>
+                                            
+                                            <div class="col-span-1 md:col-span-2 text-left md:text-center">
+                                                <span class="md:hidden text-xs text-gray-500 font-bold uppercase mr-2">Offer:</span>
+                                                <span class="text-xl font-black text-[#910A67]">₹{{ number_format($product->offer_price, 2) }}</span>
+                                            </div>
+                                            
+                                            <div class="col-span-1 md:col-span-2 flex justify-start md:justify-center">
+                                                <div class="flex items-center border-2 border-[#910A67] rounded-md overflow-hidden bg-white w-28">
+                                                    <button type="button" @click="updateQty({{ json_encode($product) }}, -1)" class="w-8 py-1.5 bg-[#910A67]/10 text-[#910A67] hover:bg-[#910A67] hover:text-white transition font-black text-lg">-</button>
+                                                    <input type="number" readonly :value="getQty({{ $product->id }})" class="w-12 text-center text-sm font-black bg-transparent text-slate-900 focus:outline-none p-0 border-none">
+                                                    <button type="button" @click="updateQty({{ json_encode($product) }}, 1)" class="w-8 py-1.5 bg-[#910A67]/10 text-[#910A67] hover:bg-[#910A67] hover:text-white transition font-black text-lg">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+                    @endforeach
+                </div>
+
+                <!-- Right: Sticky Summary -->
+                <div class="w-full lg:w-1/4">
+                    <div class="sticky top-28 bg-[#910A67] text-white rounded-xl shadow-xl overflow-hidden border-2 border-[#FFC000]">
+                        <div class="bg-[#FFC000] text-slate-900 p-4 font-black uppercase text-center tracking-widest">
+                            Your Order
+                        </div>
+                        
+                        <div class="p-6 space-y-4">
+                            <div class="flex justify-between items-center pb-4 border-b border-pink-800">
+                                <span class="font-bold text-pink-200">Total Items</span>
+                                <span class="font-black text-xl" x-text="cartCount"></span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center pb-4 border-b border-pink-800">
+                                <span class="font-bold text-pink-200">Total MRP</span>
+                                <span class="font-bold text-pink-300 line-through" x-text="`₹${totalMrp.toLocaleString('en-IN')}`"></span>
+                            </div>
+
+                            <div class="flex justify-between items-center pb-4 border-b border-pink-800">
+                                <span class="font-bold text-[#FFC000]">Total Savings</span>
+                                <span class="font-black text-[#FFC000] text-lg" x-text="`₹${totalSavings.toLocaleString('en-IN')}`"></span>
+                            </div>
+
+                            <div class="pt-2 pb-4">
+                                <div class="text-sm font-bold text-pink-200 uppercase tracking-widest text-center mb-1">Payable Amount</div>
+                                <div class="text-4xl font-black text-center text-white drop-shadow-md" x-text="`₹${totalPayable.toLocaleString('en-IN')}`"></div>
+                            </div>
+
+                            <a href="#checkout" class="block w-full py-4 bg-[#FFC000] text-slate-900 text-center font-black rounded-lg uppercase tracking-widest hover:bg-[#e5ac00] transition-colors shadow-lg shadow-yellow-500/20">
+                                Checkout Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            @foreach($combos as $combo)
-                <x-combo-card :combo="$combo" />
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
+    </section>
+
+    <!-- ==========================================
+         SEO SECTION
+         ========================================== -->
+    @if($seoSections->count() > 0)
+        <section class="py-16 bg-slate-100 border-t border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    @foreach($seoSections as $section)
+                        <div>
+                            <h2 class="text-2xl font-black text-[#910A67] uppercase mb-4">{{ $section->title }}</h2>
+                            <div class="prose prose-sm prose-slate max-w-none font-medium leading-relaxed">
+                                {!! $section->content !!}
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
 
 @endsection

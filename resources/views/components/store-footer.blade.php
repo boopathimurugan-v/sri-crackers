@@ -1,69 +1,64 @@
-<footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
+<footer class="bg-[#910A67] text-white py-12 border-t border-pink-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
             <div class="flex items-center gap-3 mb-4">
-                @if(isset($globalSettings) && $globalSettings->logo)
-                    <img src="{{ Storage::url('settings/' . $globalSettings->logo) }}" alt="Logo" class="h-10 rounded shadow-sm bg-white p-1">
+                @if(isset($settings) && isset($settings['logo_url']))
+                    <img src="{{ $settings['logo_url'] }}" alt="Logo" class="h-12 bg-white rounded p-1">
                 @else
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-700 shadow-sm">
-                        <i data-lucide="sparkles" class="w-6 h-6"></i>
-                    </div>
+                    <span class="text-2xl font-black uppercase text-[#FFC000]">Fireworks</span>
                 @endif
-                <span class="text-xl font-black text-white tracking-wide uppercase">{{ isset($globalSettings) && $globalSettings->website_name ? $globalSettings->website_name : 'SRI CRACKERS' }}</span>
             </div>
-            <p class="text-xs text-amber-100/70 leading-relaxed">
-                {{ isset($globalSettings) && $globalSettings->footer_text ? $globalSettings->footer_text : 'Your trusted partner for authentic, safe, and high-quality Sivakasi crackers at wholesale prices.' }}
+            <p class="text-sm text-pink-100 leading-relaxed font-medium">
+                {{ isset($settings) && isset($settings['footer_text']) ? $settings['footer_text'] : 'Your trusted partner for authentic, safe, and high-quality Sivakasi crackers at wholesale prices.' }}
             </p>
-            @if(isset($globalSettings) && ($globalSettings->facebook_url || $globalSettings->twitter_url || $globalSettings->instagram_url))
-                <div class="flex gap-3 mt-4">
-                    @if($globalSettings->facebook_url)
-                        <a href="{{ $globalSettings->facebook_url }}" target="_blank" class="text-amber-100 hover:text-white"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                    @endif
-                    @if($globalSettings->twitter_url)
-                        <a href="{{ $globalSettings->twitter_url }}" target="_blank" class="text-amber-100 hover:text-white"><i data-lucide="twitter" class="w-4 h-4"></i></a>
-                    @endif
-                    @if($globalSettings->instagram_url)
-                        <a href="{{ $globalSettings->instagram_url }}" target="_blank" class="text-amber-100 hover:text-white"><i data-lucide="instagram" class="w-4 h-4"></i></a>
-                    @endif
-                </div>
-            @endif
         </div>
+        
         <div>
-            <h5 class="text-white font-bold text-sm mb-3 uppercase tracking-wider">Quick Links</h5>
-            <ul class="space-y-2 text-xs">
-                <li><a href="{{ url('/#about') }}" class="text-amber-100/70 hover:text-amber-300 transition">About Us</a></li>
-                <li><a href="{{ url('/price-list') }}" class="text-amber-100/70 hover:text-amber-300 transition">Download Price List</a></li>
-                <li><a href="{{ url('/combos') }}" class="text-amber-100/70 hover:text-amber-300 transition">Combo Packages</a></li>
-                <li><a href="{{ url('/contact') }}" class="text-amber-100/70 hover:text-amber-300 transition">Contact Us</a></li>
+            <h5 class="text-[#FFC000] font-black text-lg mb-4 uppercase tracking-wider">Quick Links</h5>
+            <ul class="space-y-2 text-sm font-bold text-pink-100">
+                <li><a href="{{ url('/') }}" class="hover:text-white transition flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Home</a></li>
+                <li><a href="{{ url('/categories') }}" class="hover:text-white transition flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Categories</a></li>
+                <li><a href="{{ url('/price-list') }}" class="hover:text-white transition flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Price List</a></li>
+                <li><a href="{{ url('/contact') }}" class="hover:text-white transition flex items-center gap-2"><i data-lucide="chevron-right" class="w-4 h-4"></i> Contact</a></li>
             </ul>
         </div>
+        
         <div>
-            <h5 class="text-white font-bold text-sm mb-3 uppercase tracking-wider">Contact Info</h5>
-            <p class="text-xs text-amber-100/70 leading-relaxed">
-                {!! isset($globalSettings) && $globalSettings->address ? nl2br(e($globalSettings->address)) : 'Sivakasi Main Road,<br />Tamil Nadu, India' !!}<br />
-                <strong class="text-amber-200 mt-2 block">Phone:</strong> {{ isset($globalSettings) && $globalSettings->phone ? $globalSettings->phone : '+91 98765 43210' }}<br />
-                <strong class="text-amber-200">Email:</strong> {{ isset($globalSettings) && $globalSettings->email ? $globalSettings->email : 'info@sricrackers.com' }}
-            </p>
-            @if(isset($globalSettings) && $globalSettings->gst_number)
-                <p class="text-xs text-amber-100/70 mt-2"><strong class="text-amber-200">GST:</strong> {{ $globalSettings->gst_number }}</p>
-            @endif
+            <h5 class="text-[#FFC000] font-black text-lg mb-4 uppercase tracking-wider">Contact Info</h5>
+            <div class="text-sm text-pink-100 font-medium space-y-3">
+                <div class="flex items-start gap-3">
+                    <i data-lucide="map-pin" class="w-5 h-5 mt-0.5 text-[#FFC000]"></i>
+                    <p>{{ isset($settings) && isset($settings['address']) ? $settings['address'] : 'Sivakasi Main Road, Tamil Nadu, India' }}</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i data-lucide="phone" class="w-5 h-5 text-[#FFC000]"></i>
+                    <p>{{ isset($settings) && isset($settings['phone']) ? $settings['phone'] : '+91 00000 00000' }}</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <i data-lucide="mail" class="w-5 h-5 text-[#FFC000]"></i>
+                    <p>{{ isset($settings) && isset($settings['email']) ? $settings['email'] : 'info@example.com' }}</p>
+                </div>
+            </div>
         </div>
+
         <div>
-            <h5 class="text-white font-bold text-sm mb-3">Newsletter</h5>
-            <p class="text-xs text-slate-400 leading-relaxed mb-3">
-                Subscribe to get special offers and updates!
-            </p>
-            <form action="{{ route('newsletter.subscribe') }}" method="POST" class="flex">
-                @csrf
-                <input type="email" name="email" placeholder="Your email address" required class="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-l-lg focus:outline-none focus:border-red-500 text-sm text-white placeholder-slate-500">
-                <button type="submit" class="bg-red-600 hover:bg-red-700 px-3 py-2 rounded-r-lg transition">
-                    <i data-lucide="send" class="w-4 h-4 text-white"></i>
-                </button>
-            </form>
+            <h5 class="text-[#FFC000] font-black text-lg mb-4 uppercase tracking-wider">Connect With Us</h5>
+            <div class="flex gap-4">
+                @if(isset($settings) && isset($settings['instagram_url']))
+                    <a href="{{ $settings['instagram_url'] }}" target="_blank" class="w-10 h-10 bg-pink-800 rounded-full flex items-center justify-center hover:bg-[#FFC000] hover:text-[#910A67] transition-colors shadow-lg">
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                    </a>
+                @endif
+                @if(isset($settings) && isset($settings['youtube_url']))
+                    <a href="{{ $settings['youtube_url'] }}" target="_blank" class="w-10 h-10 bg-pink-800 rounded-full flex items-center justify-center hover:bg-[#FFC000] hover:text-[#910A67] transition-colors shadow-lg">
+                        <i data-lucide="youtube" class="w-5 h-5"></i>
+                    </a>
+                @endif
+            </div>
         </div>
     </div>
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p>© {{ date('Y') }} Sri Crackers. All rights reserved.</p>
-        <p>Built with ❤️ by Sri Crackers Team</p>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-pink-800/50 text-center text-sm font-medium text-pink-200">
+        <p>{{ isset($settings) && isset($settings['footer_copyright']) ? $settings['footer_copyright'] : '© ' . date('Y') . ' Sivakasi Fireworks. All Rights Reserved.' }}</p>
     </div>
 </footer>

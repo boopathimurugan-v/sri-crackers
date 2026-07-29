@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Models\Setting;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Support\Str;
@@ -66,8 +67,11 @@ class CheckoutController extends Controller
                 ];
             }
 
-            // Assume GST is 18%
-            $gstAmount = $subtotal * 0.18;
+            $settings = Setting::first();
+            $gstAmount = 0;
+            if ($settings && $settings->gst_enabled) {
+                $gstAmount = ($subtotal * $settings->gst_percentage) / 100;
+            }
             $totalAmount = $subtotal + $gstAmount;
 
             $isShippingSame = $request->has('is_shipping_same') ? 1 : 0;

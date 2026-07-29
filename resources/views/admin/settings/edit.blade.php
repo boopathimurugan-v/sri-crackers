@@ -125,6 +125,31 @@
             </div>
         </div>
 
+        <!-- GST Settings -->
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="m-0 font-weight-bold text-primary"><i class="bi bi-receipt me-2"></i>GST Settings</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch fs-5 mt-4">
+                                <input class="form-check-input" type="checkbox" role="switch" name="gst_enabled" id="gst_enabled" value="1" {{ old('gst_enabled', $settings->gst_enabled) ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold ms-2" for="gst_enabled">Enable GST Calculations</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">GST Percentage (%)</label>
+                            <input type="number" step="0.01" name="gst_percentage" class="form-control @error('gst_percentage') is-invalid @enderror" value="{{ old('gst_percentage', $settings->gst_percentage) }}">
+                            <small class="text-muted">Will be applied to the cart subtotal if enabled (e.g. 18)</small>
+                            @error('gst_percentage')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {!! '<!-- SEO Settings -->' !!}
         <div class="col-lg-12 mb-4">
             <div class="card shadow-sm border-0">
