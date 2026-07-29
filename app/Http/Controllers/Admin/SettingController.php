@@ -33,8 +33,12 @@ class SettingController extends Controller
             'meta_description' => 'nullable|string',
             'meta_keywords' => 'nullable|string',
             'og_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gst_enabled' => 'nullable|boolean',
+            'gst_percentage' => 'nullable|numeric|min:0|max:100',
         ]);
 
+        $validated['gst_enabled'] = $request->has('gst_enabled') ? 1 : 0;
+        
         $settings = Setting::first() ?? new Setting();
 
         if ($request->hasFile('logo')) {

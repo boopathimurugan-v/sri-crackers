@@ -1,92 +1,87 @@
-<header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-amber-100 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-        
-        {!! '<!-- Logo -->' !!}
-        <div class="flex items-center gap-3">
-            @if(isset($globalSettings) && $globalSettings->logo)
-                <img src="{{ Storage::url('settings/' . $globalSettings->logo) }}" alt="Logo" class="h-10 rounded shadow-sm bg-white p-1">
-            @else
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-red-700 shadow-sm">
-                    <i data-lucide="sparkles" class="w-6 h-6"></i>
+<header class="bg-white">
+    <!-- Top Announcement Bar -->
+    @if(isset($settings) && isset($settings['announcement_text']))
+        <div class="bg-[#910A67] text-white text-center text-xs sm:text-sm py-2 font-semibold">
+            {{ $settings['announcement_text'] }}
+        </div>
+    @endif
+
+    <!-- Main Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            
+            <!-- Logo -->
+            <div class="flex-shrink-0 flex items-center">
+                <a href="{{ url('/') }}">
+                    @if(isset($settings) && isset($settings['logo_url']))
+                        <img src="{{ $settings['logo_url'] }}" alt="Logo" class="h-12 md:h-16">
+                    @else
+                        <span class="text-2xl font-black text-[#910A67] uppercase">{{ isset($settings['website_name']) ? $settings['website_name'] : 'Fireworks' }}</span>
+                    @endif
+                </a>
+            </div>
+
+            <!-- Search Bar (Middle) -->
+            <div class="flex-1 max-w-2xl hidden md:flex items-center mx-8">
+                <div class="relative w-full">
+                    <input type="text" placeholder="Search for products..." class="w-full pl-4 pr-12 py-3 rounded-full border-2 border-gray-200 focus:border-[#910A67] focus:ring-0 outline-none transition-colors text-sm font-medium text-gray-700">
+                    <button class="absolute right-0 top-0 h-full px-5 bg-[#FFC000] rounded-r-full text-slate-900 hover:bg-[#e5ac00] transition-colors">
+                        <i data-lucide="search" class="w-5 h-5"></i>
+                    </button>
                 </div>
-            @endif
-            <div>
-                <span class="text-xl font-black tracking-wide text-red-600 uppercase block leading-none">
-                    {{ isset($globalSettings) && $globalSettings->website_name ? $globalSettings->website_name : 'Sri Crackers' }}
-                </span>
-                <span class="text-[10px] tracking-widest text-amber-600 font-bold uppercase">
-                    Sivakasi Direct Quality
-                </span>
+            </div>
+
+            <!-- Right Actions -->
+            <div class="flex items-center gap-6">
+                <div class="hidden lg:flex flex-col text-right">
+                    <span class="text-[#910A67] font-black text-lg">{{ isset($settings['phone']) ? $settings['phone'] : '+91 00000 00000' }}</span>
+                    <span class="text-xs text-gray-500 font-bold uppercase tracking-wider">Customer Support</span>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <button @click="isCartOpen = true" class="relative bg-[#910A67] hover:bg-[#7a0856] text-white p-3 rounded-xl transition shadow-lg shadow-pink-900/20">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                        <span x-text="cartCount" class="absolute -top-2 -right-2 bg-[#FFC000] text-slate-900 text-xs font-black w-6 h-6 flex items-center justify-center rounded-full border-2 border-white shadow-sm">0</span>
+                    </button>
+                    
+                    <button class="md:hidden text-slate-700" @click="isMenuOpen = !isMenuOpen">
+                        <i data-lucide="menu" x-show="!isMenuOpen"></i>
+                        <i data-lucide="x" x-show="isMenuOpen" x-cloak></i>
+                    </button>
+                </div>
             </div>
         </div>
 
-        {!! '<!-- Desktop Nav -->' !!}
-        <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-700">
-            <a href="{{ url('/') }}" class="{{ request()->is('/') ? 'text-red-600' : 'hover:text-red-600 transition' }}">Home</a>
-            <a href="{{ url('/categories') }}" class="{{ request()->is('categories') ? 'text-red-600' : 'hover:text-red-600 transition' }}">Categories</a>
-            <a href="{{ url('/combos') }}" class="{{ request()->is('combos') ? 'text-red-600' : 'hover:text-red-600 transition' }}">Combo Offers</a>
-            <a href="{{ url('/price-list') }}" class="{{ request()->is('price-list') ? 'text-red-600' : 'hover:text-red-600 transition' }}">Price List</a>
-            <a href="{{ url('/about') }}" class="{{ request()->is('about') ? 'text-red-600' : 'hover:text-red-600 transition' }}">About Us</a>
-            <a href="{{ url('/contact') }}" class="{{ request()->is('contact') ? 'text-red-600' : 'hover:text-red-600 transition' }}">Contact</a>
-        </nav>
-
-        {!! '<!-- Right Actions -->' !!}
-        <div class="hidden md:flex items-center gap-4">
-            <button class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition">
-                <i data-lucide="search" class="w-4 h-4"></i> Search
-            </button>
-            
-            @auth
-                <a href="{{ route('customer.dashboard') }}" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition">
-                    <i data-lucide="user" class="w-4 h-4"></i> Account
-                </a>
-            @else
-                <a href="{{ route('login') }}" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium transition">
-                    <i data-lucide="user" class="w-4 h-4"></i> Login
-                </a>
-            @endauth
-
-            <button @click="isCartOpen = true" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md shadow-red-200 transition">
-                <i data-lucide="shopping-cart" class="w-4 h-4"></i> Cart (<span x-text="cartCount"></span>)
+        <!-- Mobile Search (Visible only on small screens) -->
+        <div class="mt-4 md:hidden relative w-full">
+            <input type="text" placeholder="Search..." class="w-full pl-4 pr-12 py-2.5 rounded-full border border-gray-200 focus:border-[#910A67] outline-none text-sm font-medium">
+            <button class="absolute right-0 top-0 h-full px-4 bg-[#FFC000] rounded-r-full text-slate-900">
+                <i data-lucide="search" class="w-4 h-4"></i>
             </button>
         </div>
-
-        {!! '<!-- Mobile Menu Button -->' !!}
-        <button class="md:hidden text-slate-700" @click="isMenuOpen = !isMenuOpen">
-            <i data-lucide="menu" x-show="!isMenuOpen"></i>
-            <i data-lucide="x" x-show="isMenuOpen" x-cloak></i>
-        </button>
     </div>
 
-    {!! '<!-- Mobile Dropdown -->' !!}
-    <div x-show="isMenuOpen" 
-         x-cloak
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 -translate-y-2"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-150"
-         x-transition:leave-start="opacity-100 translate-y-0"
-         x-transition:leave-end="opacity-0 -translate-y-2"
-         class="md:hidden bg-white border-b border-amber-100 px-4 pt-2 pb-6 space-y-3 font-medium absolute w-full shadow-lg">
-        <a href="{{ url('/') }}" class="block {{ request()->is('/') ? 'text-red-600' : 'text-slate-600' }}">Home</a>
-        <a href="{{ url('/categories') }}" class="block {{ request()->is('categories') ? 'text-red-600' : 'text-slate-600' }}">Categories</a>
-        <a href="{{ url('/combos') }}" class="block {{ request()->is('combos') ? 'text-red-600' : 'text-slate-600' }}">Combo Offers</a>
-        <a href="{{ url('/price-list') }}" class="block {{ request()->is('price-list') ? 'text-red-600' : 'text-slate-600' }}">Price List</a>
-        <a href="{{ url('/about') }}" class="block {{ request()->is('about') ? 'text-red-600' : 'text-slate-600' }}">About Us</a>
-        <a href="{{ url('/contact') }}" class="block {{ request()->is('contact') ? 'text-red-600' : 'text-slate-600' }}">Contact</a>
-        
-        @auth
-            <a href="{{ route('customer.dashboard') }}" class="block text-slate-600 border-t border-slate-100 pt-3 mt-3">My Account</a>
-        @else
-            <a href="{{ route('login') }}" class="block text-slate-600 border-t border-slate-100 pt-3 mt-3">Login / Register</a>
-        @endauth
+    <!-- Navbar -->
+    <nav class="bg-[#910A67] text-white hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ul class="flex items-center justify-center gap-8 py-3 text-sm font-bold uppercase tracking-wider">
+                <li><a href="{{ url('/') }}" class="hover:text-[#FFC000] transition {{ request()->is('/') ? 'text-[#FFC000]' : '' }}">Home</a></li>
+                <li><a href="{{ url('/categories') }}" class="hover:text-[#FFC000] transition {{ request()->is('categories') ? 'text-[#FFC000]' : '' }}">Category</a></li>
+                <li><a href="{{ url('/price-list') }}" class="hover:text-[#FFC000] transition flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Price List</a></li>
+                <li><a href="{{ url('/about') }}" class="hover:text-[#FFC000] transition {{ request()->is('about') ? 'text-[#FFC000]' : '' }}">About Us</a></li>
+                <li><a href="{{ url('/contact') }}" class="hover:text-[#FFC000] transition {{ request()->is('contact') ? 'text-[#FFC000]' : '' }}">Contact Us</a></li>
+            </ul>
+        </div>
+    </nav>
 
-        <button @click="isCartOpen = true; isMenuOpen = false" class="w-full flex items-center justify-center gap-2 bg-red-600 text-white py-2.5 rounded-xl font-bold mt-4">
-            <i data-lucide="shopping-cart" class="w-4 h-4"></i> View Cart (<span x-text="cartCount"></span>)
-        </button>
+    <!-- Mobile Menu Dropdown -->
+    <div x-show="isMenuOpen" x-cloak class="md:hidden bg-[#910A67] text-white absolute w-full z-50 shadow-xl border-t border-pink-800">
+        <ul class="flex flex-col text-sm font-bold uppercase tracking-wider divide-y divide-pink-800/50">
+            <li><a href="{{ url('/') }}" class="block px-6 py-4 hover:bg-pink-900">Home</a></li>
+            <li><a href="{{ url('/categories') }}" class="block px-6 py-4 hover:bg-pink-900">Category</a></li>
+            <li><a href="{{ url('/price-list') }}" class="block px-6 py-4 hover:bg-pink-900 flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Price List</a></li>
+            <li><a href="{{ url('/about') }}" class="block px-6 py-4 hover:bg-pink-900">About Us</a></li>
+            <li><a href="{{ url('/contact') }}" class="block px-6 py-4 hover:bg-pink-900">Contact Us</a></li>
+        </ul>
     </div>
 </header>
-
-<style>
-    [x-cloak] { display: none !important; }
-</style>

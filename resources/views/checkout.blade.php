@@ -192,18 +192,18 @@
                         <div class="border-t border-slate-200 pt-4 space-y-3">
                             <div class="flex justify-between text-sm text-slate-600">
                                 <span>Subtotal</span>
-                                <span class="font-bold text-slate-900" x-text="'₹' + cartTotal.toLocaleString('en-IN')"></span>
+                                <span class="font-bold text-slate-900" x-text="'₹' + totalPayable.toLocaleString('en-IN')"></span>
                             </div>
-                            <div class="flex justify-between text-sm text-slate-600">
-                                <span>Estimated GST (18%)</span>
-                                <span class="font-bold text-slate-900" x-text="'₹' + (cartTotal * 0.18).toLocaleString('en-IN')"></span>
+                            <div class="flex justify-between text-sm text-slate-600" x-show="gstEnabled">
+                                <span>GST (<span x-text="gstPercentage"></span>%)</span>
+                                <span class="font-bold text-slate-900" x-text="'₹' + totalGst.toLocaleString('en-IN')"></span>
                             </div>
                         </div>
 
                         <div class="border-t border-slate-200 pt-4 mt-4">
                             <div class="flex justify-between items-center mb-6">
                                 <span class="text-lg font-bold text-slate-900">Total</span>
-                                <span class="text-2xl font-black text-red-600" x-text="'₹' + (cartTotal * 1.18).toLocaleString('en-IN')"></span>
+                                <span class="text-2xl font-black text-red-600" x-text="'₹' + finalPayable.toLocaleString('en-IN')"></span>
                             </div>
 
                             <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 rounded-xl shadow-lg transition-transform transform active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide text-sm">

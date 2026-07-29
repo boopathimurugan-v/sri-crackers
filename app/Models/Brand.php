@@ -4,20 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class Category extends Model
+class Brand extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = [
         'name',
         'slug',
+        'logo_path',
         'description',
-        'image',
-        'status',
-        'image_path',
-        'sort_order',
+        'is_featured',
         'is_active',
     ];
 

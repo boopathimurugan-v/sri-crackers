@@ -61,47 +61,77 @@
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-amber-50/30 text-slate-800 font-sans" 
-      x-data="{ 
-          isMenuOpen: false, 
-          isCartOpen: false,
-          cart: JSON.parse(localStorage.getItem('cart') || '[]'),
-          saveCart() {
-              localStorage.setItem('cart', JSON.stringify(this.cart));
-          },
-          clearCart() {
-              this.cart = [];
-              this.saveCart();
-          },
-          addToCart(product) {
-              const existing = this.cart.find(item => item.name === product.name);
-              if (existing) {
-                  existing.quantity += 1;
-              } else {
-                  this.cart.push({ ...product, quantity: 1 });
-              }
-              this.saveCart();
-              this.isCartOpen = true;
-          },
-          removeFromCart(index) {
-              this.cart.splice(index, 1);
-              this.saveCart();
-          },
-          updateQuantity(index, amount) {
-              if (this.cart[index].quantity + amount > 0) {
-                  this.cart[index].quantity += amount;
-              } else {
-                  this.removeFromCart(index);
-              }
-              this.saveCart();
-          },
-          get cartTotal() {
-              return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-          },
-          get cartCount() {
-              return this.cart.reduce((count, item) => count + item.quantity, 0);
-          }
-      }">
+<body class="bg-gray-50 text-slate-800 font-sans" x-data="crackerStore()" data-gst-enabled="{{ isset($globalSettings) && $globalSettings->gst_enabled ? 'true' : 'false' }}" data-gst-percentage="{{ isset($globalSettings) ? $globalSettings->gst_percentage : 0 }}">
+
+    <script>
+        function crackerStore() {
+            return {
+                isMenuOpen: false,
+                isCartOpen: false,
+                cart: JSON.parse(localStorage.getItem('cracker_cart') || '[]'),
+                gstEnabled: document.body.dataset.gstEnabled === 'true',
+                gstPercentage: parseFloat(document.body.dataset.gstPercentage || 0),
+                
+                saveCart() {
+                    localStorage.setItem('cracker_cart', JSON.stringify(this.cart));
+                },
+                
+                getQty(productId) {
+                    const item = this.cart.find(i => i.id === productId);
+                    return item ? item.quantity : 0;
+                },
+                
+                updateQty(product, amount) {
+                    const index = this.cart.findIndex(i => i.id === product.id);
+                    if (index > -1) {
+                        const newQty = this.cart[index].quantity + amount;
+                        if (newQty > 0) {
+                            this.cart[index].quantity = newQty;
+                        } else {
+                            this.cart.splice(index, 1);
+                        }
+                    } else if (amount > 0) {
+                        this.cart.push({
+                            id: product.id,
+                            name: product.name,
+                            image: product.main_image || product.image_path,
+                            mrp: parseFloat(product.mrp),
+                            price: parseFloat(product.offer_price),
+                            quantity: amount
+                        });
+                    }
+                    this.saveCart();
+                },
+                
+                get cartCount() {
+                    return this.cart.reduce((count, item) => count + item.quantity, 0);
+                },
+                
+                get totalMrp() {
+                    return this.cart.reduce((total, item) => total + (item.mrp * item.quantity), 0);
+                },
+                
+                get totalPayable() {
+                    return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+                },
+                
+                get totalSavings() {
+                    return this.totalMrp - this.totalPayable;
+                },
+                
+                get totalGst() {
+                    if (this.gstEnabled) {
+                        return (this.totalPayable * this.gstPercentage) / 100;
+                    }
+                    return 0;
+                },
+                
+                get finalPayable() {
+                    return this.totalPayable + this.totalGst;
+                }
+            }
+        }
+    </script>
 
     @include('components.store-header')
     

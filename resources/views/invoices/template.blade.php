@@ -149,11 +149,11 @@
                 <td class="right">₹{{ number_format($order->subtotal, 2) }}</td>
             </tr>
             <tr>
-                <td style="color: #64748b;">CGST (9%)</td>
+                <td style="color: #64748b;">CGST</td>
                 <td class="right">₹{{ number_format($cgst, 2) }}</td>
             </tr>
             <tr>
-                <td style="color: #64748b;">SGST (9%)</td>
+                <td style="color: #64748b;">SGST</td>
                 <td class="right">₹{{ number_format($sgst, 2) }}</td>
             </tr>
             <tr class="total-row">

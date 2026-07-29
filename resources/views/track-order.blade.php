@@ -88,7 +88,7 @@
                             <span class="font-bold text-slate-900">₹{{ number_format($order->subtotal, 2) }}</span>
                         </div>
                         <div class="flex justify-between">
-                            <span>GST (18%)</span>
+                            <span>GST</span>
                             <span class="font-bold text-slate-900">₹{{ number_format($order->gst_amount, 2) }}</span>
                         </div>
                         <div class="flex justify-between pt-2 border-t border-slate-200 text-base">
