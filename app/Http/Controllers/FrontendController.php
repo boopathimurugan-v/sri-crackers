@@ -89,13 +89,116 @@ class FrontendController extends Controller
 
     public function categories()
     {
+        $categoriesList = [
+            [
+                'id' => 1,
+                'name' => 'Festival Combo Packs',
+                'slug' => 'festival-combo-packs',
+                'description' => 'Curated mega celebration packs with multi-firework assortments for all family grand events.',
+                'image' => asset('images/3d/combos.png'),
+                'count' => '45+ Items',
+                'badge' => 'Bestseller 💥',
+                'tag' => 'Grand Savings'
+            ],
+            [
+                'id' => 2,
+                'name' => 'Premium Collection',
+                'slug' => 'premium-collection',
+                'description' => 'Exclusive royal grade fireworks with intense colors and high-altitude luxury light displays.',
+                'image' => asset('images/3d/premium.png'),
+                'count' => '28+ Items',
+                'badge' => 'Royal Grade 👑',
+                'tag' => 'Exclusive'
+            ],
+            [
+                'id' => 3,
+                'name' => 'Gift Boxes',
+                'slug' => 'gift-boxes',
+                'description' => 'Luxury handcrafted velvet and gold embossed gift hampers perfect for festival gifting.',
+                'image' => asset('images/3d/gift_boxes.png'),
+                'count' => '15+ Hampers',
+                'badge' => 'Luxury Gift 🎁',
+                'tag' => 'Popular'
+            ],
+            [
+                'id' => 4,
+                'name' => 'Sparklers',
+                'slug' => 'sparklers',
+                'description' => 'Dazzling gold, electric blue, and sparkling crimson hand sparklers with long burn time.',
+                'image' => asset('images/3d/sparklers.png'),
+                'count' => '32+ Varieties',
+                'badge' => 'Extra Bright ✨',
+                'tag' => 'Classic'
+            ],
+            [
+                'id' => 5,
+                'name' => 'Flower Pots',
+                'slug' => 'flower-pots',
+                'description' => 'High fountain golden showers, crackling glitter, and multi-color giant fountains.',
+                'image' => asset('images/3d/flower_pots.png'),
+                'count' => '24+ Types',
+                'badge' => 'Mega Fountain ⛲',
+                'tag' => 'Family Fav'
+            ],
+            [
+                'id' => 6,
+                'name' => 'Ground Chakkars',
+                'slug' => 'ground-chakkars',
+                'description' => 'Fast spinning gold ring wheels, whistling chakras, and high-speed multi-stage spinners.',
+                'image' => asset('images/3d/chakkars.png'),
+                'count' => '18+ Types',
+                'badge' => 'High Speed 🌀',
+                'tag' => 'Vibrant'
+            ],
+            [
+                'id' => 7,
+                'name' => 'Rockets',
+                'slug' => 'rockets',
+                'description' => 'Precision high-altitude whistle rockets with palm tree, gold willow, and strobe effects.',
+                'image' => asset('images/3d/rockets.png'),
+                'count' => '20+ Models',
+                'badge' => 'High Altitude 🚀',
+                'tag' => 'Thrilling'
+            ],
+            [
+                'id' => 8,
+                'name' => 'Sky Shots',
+                'slug' => 'sky-shots',
+                'description' => 'Spectacular 12 to 240 multi-shot repeaters painting the night sky with grand colors.',
+                'image' => asset('images/3d/sky_shots.png'),
+                'count' => '35+ Repeaters',
+                'badge' => 'Multi Shot 🎆',
+                'tag' => 'Night Show'
+            ],
+            [
+                'id' => 9,
+                'name' => 'Kids Collection',
+                'slug' => 'kids-collection',
+                'description' => '100% low-noise, eco-safe, smoke-controlled delight crackers designed for young ones.',
+                'image' => asset('images/3d/kids.png'),
+                'count' => '25+ Safe Items',
+                'badge' => 'Safe & Fun 🎈',
+                'tag' => 'Green Crackers'
+            ],
+            [
+                'id' => 10,
+                'name' => 'Bulk Orders',
+                'slug' => 'bulk-orders',
+                'description' => 'Factory wholesale pricing for community events, corporate orders, and large celebrations.',
+                'image' => asset('images/3d/bulk.png'),
+                'count' => 'Custom Crate',
+                'badge' => 'Up to 75% OFF 🏷️',
+                'tag' => 'Wholesale'
+            ]
+        ];
+
         $categories = Category::where('status', 1)->pluck('name');
         
         $allProducts = Product::with('category')->where('status', 1)->where('is_available', 1)->get()->map(function ($p) {
             return $this->mapProduct($p);
         })->toArray();
 
-        return view('categories', compact('categories', 'allProducts'));
+        return view('categories', compact('categoriesList', 'categories', 'allProducts'));
     }
 
     public function combos()
