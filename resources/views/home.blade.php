@@ -1,6 +1,6 @@
 @extends('layouts.store')
 
-@section('title', 'Sivakasi Fireworks - Direct Factory Price')
+@section('title', 'Sri Crackers')
 
 @section('content')
 
@@ -18,9 +18,13 @@
                     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col md:flex-row items-center justify-between">
                         
                         <div class="max-w-xl text-left">
-                            <h1 class="text-5xl md:text-7xl font-black text-white leading-tight uppercase mb-4 drop-shadow-lg">
-                                Sivakasi Original<br><span class="text-[#FFC000]">Crackers</span>
-                            </h1>
+                            <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+
+<h1 class="text-5xl md:text-7xl text-white leading-tight uppercase mb-4 drop-shadow-lg"
+    style="font-family: 'Cinzel', serif; font-weight: 700;">
+    Where Every Spark<br>
+    <span class="text-[#FFC000]">Creates Memories</span>
+</h1>
                             <p class="text-lg md:text-xl text-gray-200 mb-8 font-medium">Factory Direct Price • Up to 80% Discount • Eco Friendly Green Crackers</p>
                             
                             <div class="flex gap-4">
