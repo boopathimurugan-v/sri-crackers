@@ -5,7 +5,7 @@ use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderTrackingController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
 
@@ -56,13 +56,13 @@ Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'succ
 
 Route::get('/payment/process/{order_number}', [PaymentController::class, 'process'])->name('payment.process');
 Route::post('/payment/callback/{transaction}', [PaymentController::class, 'callback'])->name('payment.callback');
+Route::get('/invoices/download/{order_number}', [\App\Http\Controllers\InvoiceController::class, 'publicDownload'])->name('invoices.public-download');
 
 Route::get('/track-order', [OrderTrackingController::class, 'index'])->name('track-order');
 Route::post('/track-order', [OrderTrackingController::class, 'track'])->name('track-order.post');
 
-Route::get('/price-list', function () {
-    return view('price-list');
-});
+Route::get('/price-list', [\App\Http\Controllers\PriceListController::class, 'index'])->name('price-list');
+Route::get('/price-list/download', [\App\Http\Controllers\PriceListController::class, 'downloadPdf'])->name('price-list.download');
 
 Route::get('/about', function () {
     return view('about');

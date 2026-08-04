@@ -5,11 +5,11 @@
                 @if(isset($settings) && isset($settings['logo_url']))
                     <img src="{{ $settings['logo_url'] }}" alt="Logo" class="h-12 bg-white rounded p-1">
                 @else
-                    <span class="text-2xl font-black uppercase text-[#FFC000]">Fireworks</span>
+                    <span class="text-2xl font-black uppercase text-[#FFC000]">SRI CRACKERS</span>
                 @endif
             </div>
             <p class="text-sm text-pink-100 leading-relaxed font-medium">
-                {{ isset($settings) && isset($settings['footer_text']) ? $settings['footer_text'] : 'Your trusted partner for authentic, safe, and high-quality Sivakasi crackers at wholesale prices.' }}
+                {{ isset($settings) && isset($settings['footer_text']) ? $settings['footer_text'] : 'Your Trusted Destination for Premium Sivakasi Fireworks' }}
             </p>
         </div>
         
@@ -28,15 +28,15 @@
             <div class="text-sm text-pink-100 font-medium space-y-3">
                 <div class="flex items-start gap-3">
                     <i data-lucide="map-pin" class="w-5 h-5 mt-0.5 text-[#FFC000]"></i>
-                    <p>{{ isset($settings) && isset($settings['address']) ? $settings['address'] : 'Sivakasi Main Road, Tamil Nadu, India' }}</p>
+                    <p>{{ isset($settings) && isset($settings['address']) ? $settings['address'] : '124/B, Sattur Road, Viswanatham, Sivakasi, Tamil Nadu - 626123' }}</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <i data-lucide="phone" class="w-5 h-5 text-[#FFC000]"></i>
-                    <p>{{ isset($settings) && isset($settings['phone']) ? $settings['phone'] : '+91 00000 00000' }}</p>
+                    <p>{{ isset($settings) && isset($settings['phone']) ? $settings['phone'] : '+91 90950 43444' }}</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <i data-lucide="mail" class="w-5 h-5 text-[#FFC000]"></i>
-                    <p>{{ isset($settings) && isset($settings['email']) ? $settings['email'] : 'info@example.com' }}</p>
+                    <p>{{ isset($settings) && isset($settings['email']) ? $settings['email'] : 'support@sricrackers.com' }}</p>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
                     </a>
                 @endif
                 @if(isset($settings) && isset($settings['youtube_url']))
-                    <a href="{{ $settings['youtube_url'] }}" target="_blank" class="w-10 h-10 bg-pink-800 rounded-full flex items-center justify-center hover:bg-[#FFC000] hover:text-[#910A67] transition-colors shadow-lg">
+                    <a href="{{ $settings['youtube_url'] }}" target="_blank" class="w-10 h-10 bg-[#FFC000] rounded-full flex items-center justify-center hover:bg-[#FFC000] hover:text-[#910A67] transition-colors shadow-lg">
                         <i data-lucide="youtube" class="w-5 h-5"></i>
                     </a>
                 @endif
@@ -59,6 +59,6 @@
     </div>
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-6 border-t border-pink-800/50 text-center text-sm font-medium text-pink-200">
-        <p>{{ isset($settings) && isset($settings['footer_copyright']) ? $settings['footer_copyright'] : '© ' . date('Y') . ' Sivakasi Fireworks. All Rights Reserved.' }}</p>
+        <p>{{ isset($settings) && isset($settings['footer_copyright']) ? $settings['footer_copyright'] : '© ' . date('Y') . ' SRI CRACKERS. All Rights Reserved.' }}</p>
     </div>
 </footer>

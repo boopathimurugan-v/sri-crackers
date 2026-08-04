@@ -1,10 +1,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>@yield('title', 'Sri Crackers')</title>
+<title>@yield('title', 'SRI CRACKERS | Premium Sivakasi Fireworks')</title>
 
-<meta name="description" content="Sri Crackers - Sivakasi Direct Factory Crackers">
-<meta name="keywords" content="Sivakasi Crackers, Green Crackers, Fireworks">
+<meta name="description" content="Buy Premium Sivakasi Crackers Online from SRI CRACKERS with the Best Festival Prices, Safe Packaging, and Fast Delivery.">
+<meta name="keywords" content="SRI CRACKERS, Sivakasi Crackers, Green Crackers, Fireworks, Buy Crackers Online">
 
 <!-- Tailwind -->
 <script src="https://cdn.tailwindcss.com"></script>

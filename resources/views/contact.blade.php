@@ -21,9 +21,9 @@
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 mb-2">Our Store</h3>
                     <p class="text-slate-600 leading-relaxed">
-                        123 Crackers Street,<br>
-                        Sivakasi, Tamil Nadu<br>
-                        626123, India
+                        124/B, Sattur Road,<br>
+                        Viswanatham, Sivakasi,<br>
+                        Tamil Nadu - 626123, India
                     </p>
                 </div>
                 
@@ -32,8 +32,8 @@
                         <i data-lucide="phone" class="w-6 h-6"></i>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 mb-2">Call Us</h3>
-                    <p class="text-slate-600 mb-1">+91 98765 43210</p>
-                    <p class="text-slate-600">+91 98765 43211</p>
+                    <p class="text-slate-600 mb-1">+91 90950 43444</p>
+                    <p class="text-slate-600">+91 90874 28871</p>
                     <p class="text-sm text-slate-400 mt-2">Mon - Sat, 9am - 8pm</p>
                 </div>
 

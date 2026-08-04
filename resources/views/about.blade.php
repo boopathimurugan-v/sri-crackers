@@ -10,7 +10,7 @@
         <div>
             <h1 class="text-4xl lg:text-5xl font-extrabold text-slate-900 mb-6 leading-tight">Bringing Light and Joy from <span class="text-red-600">Sivakasi</span> to Your Home.</h1>
             <p class="text-lg text-slate-600 mb-8 leading-relaxed">
-                Sri Crackers has been a trusted name in the fireworks industry for over a decade. We are committed to providing premium quality, 100% safe, and eco-friendly green crackers directly from the heart of Sivakasi.
+                SRI CRACKERS has been a trusted name in the fireworks industry since 1985. We are committed to providing premium quality, 100% safe, and eco-friendly green crackers directly from the heart of Sivakasi.
             </p>
             <div class="flex gap-4">
                 <a href="{{ url('/categories') }}" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl shadow-md transition">Shop Now</a>
@@ -22,7 +22,7 @@
             <div class="bg-slate-900 rounded-3xl p-8 relative overflow-hidden shadow-2xl h-80 flex items-center justify-center">
                 <div class="absolute text-[12rem] opacity-20">🎆</div>
                 <div class="text-center relative z-10 text-white">
-                    <span class="block text-5xl font-black text-amber-400 mb-2">10+</span>
+                    <span class="block text-5xl font-black text-amber-400 mb-2">40+</span>
                     <span class="block text-lg font-bold uppercase tracking-widest text-slate-300">Years of Trust</span>
                 </div>
             </div>
@@ -34,7 +34,7 @@
 <div class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-3xl mx-auto mb-16">
-            <h2 class="text-3xl font-extrabold text-slate-900 mb-4">Why Choose Sri Crackers?</h2>
+            <h2 class="text-3xl font-extrabold text-slate-900 mb-4">Why Choose SRI CRACKERS?</h2>
             <p class="text-slate-600">We don't just sell fireworks; we deliver memories. Here's why thousands of families trust us every festival season.</p>
         </div>
 

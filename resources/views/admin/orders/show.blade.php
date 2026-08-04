@@ -38,8 +38,17 @@
                         </thead>
                         <tbody>
                             @foreach($order->items as $item)
+                            @php
+                                $itemName = $item->item_name;
+                                $englishPart = $itemName;
+                                $tamilPart = null;
+                                if (preg_match('/^(.*?)\s*\((.*?)\)$/u', trim($itemName), $matches)) {
+                                    $englishPart = trim($matches[1]);
+                                    $tamilPart = trim($matches[2]);
+                                }
+                            @endphp
                             <tr>
-                                <td class="fw-bold">{{ $item->item_name }}</td>
+                                <td><span class="fw-bold text-dark">{{ $englishPart }}</span>@if($tamilPart) <span class="small text-muted font-normal">({{ $tamilPart }})</span>@endif</td>
                                 <td>₹{{ number_format($item->price, 2) }}</td>
                                 <td class="text-center">x{{ $item->quantity }}</td>
                                 <td class="text-end fw-bold">₹{{ number_format($item->total, 2) }}</td>

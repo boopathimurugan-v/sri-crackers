@@ -104,11 +104,14 @@ class CheckoutController extends Controller
                 $order->items()->create($itemData);
             }
 
+            // Allocate UPI account via Smart Rotation Service
+            $upiService = new \App\Services\UpiRotationService();
+            $upiResult = $upiService->assignUpiToOrder($order);
+
             // Create Pending Transaction
-            $paymentMethod = $request->input('payment_method', 'razorpay');
             \App\Models\Transaction::create([
                 'order_id' => $order->id,
-                'payment_method' => $paymentMethod,
+                'payment_method' => 'upi',
                 'amount' => $totalAmount,
                 'status' => 'pending',
             ]);
