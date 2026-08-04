@@ -16,7 +16,7 @@
                     @if(isset($settings) && isset($settings['logo_url']))
                         <img src="{{ $settings['logo_url'] }}" alt="Logo" class="h-12 md:h-16">
                     @else
-                        <span class="text-2xl font-black text-[#910A67] uppercase">{{ isset($settings['website_name']) ? $settings['website_name'] : 'Fireworks' }}</span>
+                        <span class="text-2xl font-black text-[#910A67] uppercase">{{ isset($settings['website_name']) ? $settings['website_name'] : 'SRI CRACKERS' }}</span>
                     @endif
                 </a>
             </div>

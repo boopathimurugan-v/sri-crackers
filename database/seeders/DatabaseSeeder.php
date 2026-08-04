@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             SeoSectionSeeder::class,
             BannerSeeder::class,
             ProductSeeder::class,
+            UpiAccountSeeder::class,
         ]);
     }
 }

@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     @php
-        $siteName = isset($globalSettings) && $globalSettings->website_name ? $globalSettings->website_name : 'Sri Crackers';
-        $metaTitle = isset($globalSettings) && $globalSettings->meta_title ? $globalSettings->meta_title : $siteName;
-        $metaDesc = isset($globalSettings) && $globalSettings->meta_description ? $globalSettings->meta_description : 'Buy premium quality fireworks online at wholesale prices.';
-        $metaKeywords = isset($globalSettings) && $globalSettings->meta_keywords ? $globalSettings->meta_keywords : 'fireworks, crackers, sivakasi crackers, buy fireworks online';
+        $siteName = isset($globalSettings) && $globalSettings->website_name ? $globalSettings->website_name : 'SRI CRACKERS';
+        $metaTitle = isset($globalSettings) && $globalSettings->meta_title ? $globalSettings->meta_title : 'SRI CRACKERS | Premium Sivakasi Fireworks';
+        $metaDesc = isset($globalSettings) && $globalSettings->meta_description ? $globalSettings->meta_description : 'Buy Premium Sivakasi Crackers Online from SRI CRACKERS with the Best Festival Prices, Safe Packaging, and Fast Delivery.';
+        $metaKeywords = isset($globalSettings) && $globalSettings->meta_keywords ? $globalSettings->meta_keywords : 'SRI CRACKERS, Sivakasi Crackers, Green Crackers, Buy Crackers Online, Sivakasi Fireworks';
         $ogImage = isset($globalSettings) && $globalSettings->og_image ? Storage::url('settings/' . $globalSettings->og_image) : asset('images/default-og.jpg');
-        $pageTitle = View::hasSection('title') ? View::getSection('title') . ' - ' . $siteName : $metaTitle;
+        $pageTitle = View::hasSection('title') ? View::getSection('title') . ' | ' . $siteName : $metaTitle;
     @endphp
 
     <title>{{ $pageTitle }}</title>

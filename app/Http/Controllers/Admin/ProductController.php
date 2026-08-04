@@ -80,14 +80,26 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['name']);
         
+        $data['product_name_en'] = $request->input('product_name_en');
+        $data['product_name_ta'] = $request->input('product_name_ta');
+        $data['name'] = !empty($data['product_name_ta'])
+            ? $data['product_name_en'] . ' (' . $data['product_name_ta'] . ')'
+            : $data['product_name_en'];
+        $data['slug'] = Str::slug($data['product_name_en']);
+
+        $price = (float)($request->input('price') ?? $request->input('selling_price') ?? $request->input('offer_price') ?? 0);
+        $data['price'] = $price;
+        $data['offer_price'] = $price;
+        $data['mrp'] = $price;
+        $data['unit'] = $request->input('unit', 'Box');
+
         $data['featured'] = $request->has('featured') ? 1 : 0;
         $data['trending'] = $request->has('trending') ? 1 : 0;
         $data['status'] = $request->has('status') ? 1 : 0;
-        $data['is_available'] = $request->has('is_available') ? 1 : 0;
+        $data['is_available'] = $data['status'];
 
-        // Ensure slug is unique, might append random if exists
+        // Ensure slug is unique
         $count = Product::withTrashed()->where('slug', $data['slug'])->count();
         if($count > 0) {
             $data['slug'] = $data['slug'] . '-' . time();
@@ -128,12 +140,24 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product)
     {
         $data = $request->validated();
-        $data['slug'] = Str::slug($data['name']);
         
+        $data['product_name_en'] = $request->input('product_name_en');
+        $data['product_name_ta'] = $request->input('product_name_ta');
+        $data['name'] = !empty($data['product_name_ta'])
+            ? $data['product_name_en'] . ' (' . $data['product_name_ta'] . ')'
+            : $data['product_name_en'];
+        $data['slug'] = Str::slug($data['product_name_en']);
+
+        $price = (float)($request->input('price') ?? $request->input('selling_price') ?? $request->input('offer_price') ?? 0);
+        $data['price'] = $price;
+        $data['offer_price'] = $price;
+        $data['mrp'] = $price;
+        $data['unit'] = $request->input('unit', 'Box');
+
         $data['featured'] = $request->has('featured') ? 1 : 0;
         $data['trending'] = $request->has('trending') ? 1 : 0;
         $data['status'] = $request->has('status') ? 1 : 0;
-        $data['is_available'] = $request->has('is_available') ? 1 : 0;
+        $data['is_available'] = $data['status'];
 
         $count = Product::withTrashed()->where('slug', $data['slug'])->where('id', '!=', $product->id)->count();
         if($count > 0) {

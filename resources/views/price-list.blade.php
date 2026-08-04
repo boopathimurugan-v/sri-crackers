@@ -4,8 +4,8 @@
 
 @section('content')
 @php
-    $categories = config('store.categories', []);
-    $allProducts = config('store.products', []);
+    $categories = isset($categories) && count($categories) > 0 ? $categories : config('store.categories', []);
+    $allProducts = isset($allProducts) && count($allProducts) > 0 ? $allProducts : config('store.products', []);
 @endphp
 
 <div class="bg-amber-50/50 py-8 border-b border-amber-100">
@@ -18,9 +18,9 @@
             <button onclick="window.print()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2 text-sm">
                 <i data-lucide="printer" class="w-4 h-4"></i> Print
             </button>
-            <button class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2 text-sm">
-                <i data-lucide="file-down" class="w-4 h-4"></i> PDF
-            </button>
+            <a href="{{ route('price-list.download') }}" target="_blank" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2 text-sm">
+                <i data-lucide="file-down" class="w-4 h-4"></i> Download Latest Price List
+            </a>
             <button class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-xl shadow-sm transition flex items-center gap-2 text-sm">
                 <i data-lucide="sheet" class="w-4 h-4"></i> Excel
             </button>

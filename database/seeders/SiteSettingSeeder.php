@@ -10,17 +10,16 @@ class SiteSettingSeeder extends Seeder
     public function run(): void
     {
         Setting::updateOrCreate(['id' => 1], [
-            'website_name' => ' Sri Crackers',
-            'logo' => 'https://via.placeholder.com/200x80?text=LOGO',
+            'website_name' => 'SRI CRACKERS',
+            'logo' => 'https://via.placeholder.com/200x80?text=SRI+CRACKERS',
             'phone' => '+91 90950 43444',
-            'phone_2' => '+91 90874 28871',
-            'email' => 'sales@sivakasifireworks.com',
+            'email' => 'support@sricrackers.com',
             'address' => '124/B, Sattur Road, Viswanatham, Sivakasi, Tamil Nadu - 626123',
             'instagram_url' => 'https://instagram.com',
-            'youtube_url' => 'https://youtube.com',
-            'pricelist_url' => '#',
-            'footer_text' => '© ' . date('Y') . ' Sri Crackers. All Rights Reserved.',
-            'announcement_text' => 'Where tradition meets brilliance — SRI CRACKERS presents an exclusive collection of authentic Sivakasi fireworks, crafted for unforgettable celebrations.',
+            'footer_text' => 'Your Trusted Destination for Premium Sivakasi Fireworks',
+            'announcement_text' => 'Premium Sivakasi Fireworks Since 1985 — SRI CRACKERS presents an exclusive collection of authentic Sivakasi fireworks, crafted for unforgettable celebrations.',
+            'meta_title' => 'SRI CRACKERS | Premium Sivakasi Fireworks',
+            'meta_description' => 'Buy Premium Sivakasi Crackers Online from SRI CRACKERS with the Best Festival Prices, Safe Packaging, and Fast Delivery.',
         ]);
     }
 }

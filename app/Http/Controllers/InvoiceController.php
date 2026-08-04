@@ -41,4 +41,18 @@ class InvoiceController extends Controller
         
         return $pdf->download($filename);
     }
+
+    /**
+     * Public download route for email button link without requiring login.
+     */
+    public function publicDownload($order_number)
+    {
+        $order = Order::with('items')->where('order_number', $order_number)->firstOrFail();
+
+        $pdf = Pdf::loadView('invoices.template', compact('order'));
+
+        $filename = 'SRI-CRACKERS-INVOICE-' . ($order->invoice_number ?? $order->order_number) . '.pdf';
+
+        return $pdf->download($filename);
+    }
 }

@@ -118,7 +118,9 @@
                                             
                                             <div class="col-span-1 md:col-span-4 flex flex-col">
                                                 <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</span>
-                                                <h4 class="font-black text-slate-900 text-base leading-snug">{{ $product->name }}</h4>
+                                                <h4 class="font-black text-slate-900 text-base leading-snug">
+                                                    {{ $product->english_name }}@if($product->tamil_name) <span class="text-sm font-normal text-slate-500">({{ $product->tamil_name }})</span>@endif
+                                                </h4>
 
                                             </div>
                                             
@@ -133,11 +135,17 @@
                                             </div>
                                             
                                             <div class="col-span-1 md:col-span-2 flex justify-start md:justify-center">
-                                                <div class="flex items-center border-2 border-[#910A67] rounded-md overflow-hidden bg-white w-28">
-                                                    <button type="button" @click="updateQty({{ json_encode($product) }}, -1)" class="w-8 py-1.5 bg-[#910A67]/10 text-[#910A67] hover:bg-[#910A67] hover:text-white transition font-black text-lg">-</button>
-                                                    <input type="number" readonly :value="getQty({{ $product->id }})" class="w-12 text-center text-sm font-black bg-transparent text-slate-900 focus:outline-none p-0 border-none">
-                                                    <button type="button" @click="updateQty({{ json_encode($product) }}, 1)" class="w-8 py-1.5 bg-[#910A67]/10 text-[#910A67] hover:bg-[#910A67] hover:text-white transition font-black text-lg">+</button>
-                                                </div>
+                                                @if($product->stock > 0 && $product->is_available)
+                                                    <div class="flex items-center border-2 border-[#910A67] rounded-md overflow-hidden bg-white w-28">
+                                                        <button type="button" @click="updateQty({{ json_encode($product) }}, -1)" class="w-8 py-1.5 bg-[#910A67]/10 text-[#910A67] hover:bg-[#910A67] hover:text-white transition font-black text-lg">-</button>
+                                                        <input type="number" readonly :value="getQty({{ $product->id }})" class="w-12 text-center text-sm font-black bg-transparent text-slate-900 focus:outline-none p-0 border-none">
+                                                        <button type="button" @click="updateQty({{ json_encode($product) }}, 1)" class="w-8 py-1.5 bg-[#910A67]/10 text-[#910A67] hover:bg-[#910A67] hover:text-white transition font-black text-lg">+</button>
+                                                    </div>
+                                                @else
+                                                    <span class="inline-block bg-red-100 text-red-700 text-xs font-black px-3 py-1.5 rounded-lg border border-red-200 uppercase">
+                                                        Out of Stock
+                                                    </span>
+                                                @endif
                                             </div>
                                         </div>
                                     @endforeach

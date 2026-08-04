@@ -17,4 +17,9 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function upiAccount()
+    {
+        return $this->belongsTo(UpiAccount::class, 'upi_account_id');
+    }
 }

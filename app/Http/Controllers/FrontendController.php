@@ -15,7 +15,10 @@ class FrontendController extends Controller
     {
         return [
             'id' => $product->id,
-            'name' => $product->name,
+            'name' => $product->formatted_name,
+            'english_name' => $product->english_name,
+            'tamil_name' => $product->tamil_name,
+            'product_code' => $product->product_code ?? $product->sku ?? 'SRI-' . str_pad($product->id, 3, '0', STR_PAD_LEFT),
             'category' => $product->category ? $product->category->name : 'Uncategorized',
             'price' => (float)$product->offer_price,
             'original_price' => (float)$product->mrp,

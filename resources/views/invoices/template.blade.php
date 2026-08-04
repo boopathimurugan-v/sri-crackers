@@ -52,14 +52,14 @@
             <table>
                 <tr>
                     <td class="company-info">
-                        <h1 class="title">Sri Crackers</h1>
-                        <p style="margin: 5px 0 0 0; color: #64748b;">Light up your celebrations!</p>
+                        <h1 class="title">SRI CRACKERS</h1>
+                        <p style="margin: 5px 0 0 0; color: #64748b;">Premium Sivakasi Fireworks Since 1985</p>
                         <div style="margin-top: 15px; font-size: 12px; color: #333;">
                             <strong>GSTIN:</strong> 33ABCDE1234F1Z5<br>
-                            123 Crackers Street, Sivakasi<br>
+                            124/B, Sattur Road, Viswanatham, Sivakasi<br>
                             Tamil Nadu - 626123<br>
                             support@sricrackers.com<br>
-                            +91 98765 43210
+                            +91 90950 43444
                         </div>
                     </td>
                     <td class="invoice-details">
@@ -126,9 +126,18 @@
             </thead>
             <tbody>
                 @foreach($order->items as $index => $item)
+                @php
+                    $itemName = $item->item_name;
+                    $englishPart = $itemName;
+                    $tamilPart = null;
+                    if (preg_match('/^(.*?)\s*\((.*?)\)$/u', trim($itemName), $matches)) {
+                        $englishPart = trim($matches[1]);
+                        $tamilPart = trim($matches[2]);
+                    }
+                @endphp
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td><strong>{{ $item->item_name }}</strong></td>
+                    <td><strong>{{ $englishPart }}</strong>@if($tamilPart) <span style="font-size: 11px; color: #64748b; font-weight: normal;">({{ $tamilPart }})</span>@endif</td>
                     <td class="center">3604</td> <!-- Dummy HSN for firecrackers -->
                     <td class="center">{{ $item->quantity }}</td>
                     <td class="right">₹{{ number_format($item->price, 2) }}</td>
@@ -165,13 +174,13 @@
         <div style="clear: both; margin-top: 50px;">
             <p style="font-size: 11px; color: #64748b; font-style: italic;">
                 Amount in words: <br>
-                <strong style="color: #333;">Indian Rupees {{ \NumberFormatter::create('en_IN', \NumberFormatter::SPELLOUT)->format($order->total_amount) }} only</strong>
+                <strong style="color: #333;">Indian Rupees {{ class_exists('\NumberFormatter') ? \NumberFormatter::create('en_IN', \NumberFormatter::SPELLOUT)->format($order->total_amount) : number_format($order->total_amount, 2) }} only</strong>
             </p>
         </div>
 
         <div class="footer">
             <p style="margin: 0;">This is a computer generated invoice and does not require a signature.</p>
-            <p style="margin: 5px 0 0 0;">Thank you for shopping with Sri Crackers!</p>
+            <p style="margin: 5px 0 0 0;">Thank you for shopping with SRI CRACKERS!</p>
         </div>
 
     </div>

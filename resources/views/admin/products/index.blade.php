@@ -58,14 +58,8 @@
                 <thead class="table-light">
                     <tr>
                         <th>Image</th>
-                        <th>
-                            <a href="{{ request()->fullUrlWithQuery(['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none text-dark">
-                                Name
-                                @if(request('sort') === 'name')
-                                    <i class="bi bi-arrow-{{ request('direction') === 'asc' ? 'up' : 'down' }}"></i>
-                                @endif
-                            </a>
-                        </th>
+                        <th>English Name</th>
+                        <th>Tamil Name</th>
                         <th>Category</th>
                         <th>Price (MRP)</th>
                         <th>Stock/Unit</th>
@@ -79,7 +73,7 @@
                     <tr class="{{ $product->trashed() ? 'table-danger' : '' }}">
                         <td>
                             @if($product->main_image)
-                                <img src="{{ Storage::url($product->main_image) }}" alt="{{ $product->name }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                <img src="{{ Storage::url($product->main_image) }}" alt="{{ $product->english_name }}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
                             @else
                                 <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded" style="width: 50px; height: 50px;">
                                     <i class="bi bi-box"></i>
@@ -87,12 +81,15 @@
                             @endif
                         </td>
                         <td>
-                            <div class="fw-bold">{{ $product->name }}</div>
-                            <small class="text-muted">SKU: {{ $product->sku ?? 'N/A' }}</small>
+                            <div class="fw-bold text-dark">{{ $product->english_name }}</div>
+                            <small class="text-muted">Code: {{ $product->product_code ?? $product->sku ?? 'N/A' }}</small>
                             <div class="mt-1">
                                 @if($product->featured)<span class="badge bg-primary rounded-pill" style="font-size:0.6rem;">Featured</span>@endif
                                 @if($product->trending)<span class="badge bg-danger rounded-pill" style="font-size:0.6rem;">Trending</span>@endif
                             </div>
+                        </td>
+                        <td>
+                            <div class="fw-semibold text-dark">{{ $product->tamil_name ?? '-' }}</div>
                         </td>
                         <td>{{ $product->category->name ?? 'N/A' }}</td>
                         <td>
@@ -165,7 +162,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="text-center py-4">No products found.</td>
+                        <td colspan="9" class="text-center py-4">No products found.</td>
                     </tr>
                     @endforelse
                 </tbody>
