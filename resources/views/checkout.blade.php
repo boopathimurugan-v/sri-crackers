@@ -229,20 +229,20 @@
                             </template>
                         </ul>
 
-                        <div class="border-t border-slate-200 pt-4 space-y-3">
+                        <div class="border-t border-slate-200 pt-4 space-y-2">
                             <div class="flex justify-between text-sm text-slate-600">
-                                <span>Subtotal</span>
-                                <span class="font-bold text-slate-900" x-text="'₹' + totalPayable.toLocaleString('en-IN')"></span>
+                                <span>Net Amount</span>
+                                <span class="font-bold text-slate-900" x-text="'₹' + netAmount.toLocaleString('en-IN')"></span>
                             </div>
-                            <div class="flex justify-between text-sm text-slate-600" x-show="gstEnabled">
-                                <span>GST (<span x-text="gstPercentage"></span>%)</span>
-                                <span class="font-bold text-slate-900" x-text="'₹' + totalGst.toLocaleString('en-IN')"></span>
+                            <div class="flex justify-between text-sm text-green-700">
+                                <span>Discount</span>
+                                <span class="font-bold" x-text="'-₹' + discountAmount.toLocaleString('en-IN')"></span>
                             </div>
                         </div>
 
                         <div class="border-t border-slate-200 pt-4 mt-4">
                             <div class="flex justify-between items-center mb-6">
-                                <span class="text-lg font-bold text-slate-900">Total Payable</span>
+                                <span class="text-lg font-bold text-slate-900">Total Amount</span>
                                 <span class="text-2xl font-black text-amber-600" x-text="'₹' + finalPayable.toLocaleString('en-IN')"></span>
                             </div>
 
@@ -252,7 +252,7 @@
                             </button>
                             
                             <p class="text-center text-xs text-slate-500 mt-4">
-                                By placing your order, you agree to our Terms & Conditions.
+                                By placing your order, you agree to our Terms &amp; Conditions.
                             </p>
                         </div>
                     </div>
