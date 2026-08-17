@@ -88,10 +88,10 @@ class ProductController extends Controller
             : $data['product_name_en'];
         $data['slug'] = Str::slug($data['product_name_en']);
 
-        $price = (float)($request->input('price') ?? $request->input('selling_price') ?? $request->input('offer_price') ?? 0);
-        $data['price'] = $price;
-        $data['offer_price'] = $price;
-        $data['mrp'] = $price;
+        $price = (float)($request->input('price') ?? 0);
+        $data['price']       = $price;
+        $data['offer_price'] = $price; // kept for backward compat
+        $data['mrp']         = $price; // kept for backward compat
         $data['unit'] = $request->input('unit', 'Box');
 
         $data['featured'] = $request->has('featured') ? 1 : 0;
@@ -148,10 +148,10 @@ class ProductController extends Controller
             : $data['product_name_en'];
         $data['slug'] = Str::slug($data['product_name_en']);
 
-        $price = (float)($request->input('price') ?? $request->input('selling_price') ?? $request->input('offer_price') ?? 0);
-        $data['price'] = $price;
-        $data['offer_price'] = $price;
-        $data['mrp'] = $price;
+        $price = (float)($request->input('price') ?? 0);
+        $data['price']       = $price;
+        $data['offer_price'] = $price; // kept for backward compat
+        $data['mrp']         = $price; // kept for backward compat
         $data['unit'] = $request->input('unit', 'Box');
 
         $data['featured'] = $request->has('featured') ? 1 : 0;

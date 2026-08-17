@@ -57,15 +57,15 @@
                         </tbody>
                         <tfoot class="border-top">
                             <tr>
-                                <td colspan="3" class="text-end text-muted pt-3">Subtotal:</td>
-                                <td class="text-end fw-bold pt-3">₹{{ number_format($order->subtotal, 2) }}</td>
+                                <td colspan="3" class="text-end text-muted pt-3">Net Amount:</td>
+                                <td class="text-end fw-bold pt-3">₹{{ number_format($order->net_amount ?? $order->subtotal, 2) }}</td>
                             </tr>
                             <tr>
-                                <td colspan="3" class="text-end text-muted pb-3">GST:</td>
-                                <td class="text-end fw-bold pb-3">₹{{ number_format($order->gst_amount, 2) }}</td>
+                                <td colspan="3" class="text-end text-muted pb-1">Discount:</td>
+                                <td class="text-end fw-bold pb-1 text-success">-₹{{ number_format($order->discount_amount ?? 0, 2) }}</td>
                             </tr>
                             <tr class="bg-light rounded">
-                                <td colspan="3" class="text-end fs-5 fw-bold py-3">Total:</td>
+                                <td colspan="3" class="text-end fs-5 fw-bold py-3">Customer Paid / Payable:</td>
                                 <td class="text-end fs-5 fw-black text-danger py-3">₹{{ number_format($order->total_amount, 2) }}</td>
                             </tr>
                         </tfoot>

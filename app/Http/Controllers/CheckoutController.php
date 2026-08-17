@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Setting;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Services\PricingService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -20,22 +21,22 @@ class CheckoutController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'billing_name' => 'required|string|max:255',
-            'billing_phone' => 'required|string|max:20',
-            'billing_email' => 'nullable|email|max:255',
-            'billing_address' => 'required|string',
-            'billing_city' => 'required|string|max:255',
-            'billing_state' => 'required|string|max:255',
-            'billing_pincode' => 'required|string|max:10',
-            
-            'shipping_name' => 'required_if:is_shipping_same,0|nullable|string|max:255',
-            'shipping_phone' => 'required_if:is_shipping_same,0|nullable|string|max:20',
+            'billing_name'     => 'required|string|max:255',
+            'billing_phone'    => 'required|string|max:20',
+            'billing_email'    => 'nullable|email|max:255',
+            'billing_address'  => 'required|string',
+            'billing_city'     => 'required|string|max:255',
+            'billing_state'    => 'required|string|max:255',
+            'billing_pincode'  => 'required|string|max:10',
+
+            'shipping_name'    => 'required_if:is_shipping_same,0|nullable|string|max:255',
+            'shipping_phone'   => 'required_if:is_shipping_same,0|nullable|string|max:20',
             'shipping_address' => 'required_if:is_shipping_same,0|nullable|string',
-            'shipping_city' => 'required_if:is_shipping_same,0|nullable|string|max:255',
-            'shipping_state' => 'required_if:is_shipping_same,0|nullable|string|max:255',
+            'shipping_city'    => 'required_if:is_shipping_same,0|nullable|string|max:255',
+            'shipping_state'   => 'required_if:is_shipping_same,0|nullable|string|max:255',
             'shipping_pincode' => 'required_if:is_shipping_same,0|nullable|string|max:10',
-            
-            'cart_data' => 'required|string'
+
+            'cart_data'        => 'required|string',
         ]);
 
         $cart = json_decode($request->cart_data, true);
@@ -46,57 +47,56 @@ class CheckoutController extends Controller
         try {
             DB::beginTransaction();
 
-            $subtotal = 0;
+            $pricingService = new PricingService();
             $orderItemsData = [];
+            $lineItems      = []; // For PricingService
 
             foreach ($cart as $item) {
-                // In a real scenario, you'd fetch the product by ID to ensure price hasn't been tampered with.
-                // Since the Alpine cart currently only passes name, category, and price, we'll try to find the product by name.
+                // Always fetch the authoritative price from the DB to prevent price tampering
                 $product = Product::where('name', $item['name'])->first();
-                $price = $product ? $product->offer_price : $item['price'];
-                
-                $itemTotal = $price * $item['quantity'];
-                $subtotal += $itemTotal;
+                $price   = $product ? (float)$product->price : (float)($item['price'] ?? 0);
 
+                $lineItems[]      = ['price' => $price, 'quantity' => (int)$item['quantity']];
                 $orderItemsData[] = [
                     'product_id' => $product ? $product->id : null,
-                    'item_name' => $item['name'],
-                    'price' => $price,
-                    'quantity' => $item['quantity'],
-                    'total' => $itemTotal
+                    'item_name'  => $item['name'],
+                    'price'      => $price,
+                    'quantity'   => (int)$item['quantity'],
+                    'total'      => round($price * (int)$item['quantity'], 2),
                 ];
             }
 
-            $settings = Setting::first();
-            $gstAmount = 0;
-            if ($settings && $settings->gst_enabled) {
-                $gstAmount = ($subtotal * $settings->gst_percentage) / 100;
-            }
-            $totalAmount = $subtotal + $gstAmount;
+            // Calculate totals via PricingService (single source of truth)
+            $totals = $pricingService->calculateCartTotals($lineItems);
 
             $isShippingSame = $request->has('is_shipping_same') ? 1 : 0;
 
             $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(Str::random(10)),
-                'subtotal' => $subtotal,
-                'gst_amount' => $gstAmount,
-                'total_amount' => $totalAmount,
+                'order_number'    => 'ORD-' . strtoupper(Str::random(10)),
+
+                // Legacy subtotal = net_amount (for any code that still reads subtotal)
+                'subtotal'        => $totals['net_amount'],
+                'gst_amount'      => 0, // GST replaced by global discount system
+                'net_amount'      => $totals['net_amount'],
+                'discount_amount' => $totals['discount_amount'],
+                'total_amount'    => $totals['total_amount'],
+
                 'status' => 'pending',
-                
-                'billing_name' => $request->billing_name,
-                'billing_phone' => $request->billing_phone,
-                'billing_email' => $request->billing_email,
+
+                'billing_name'    => $request->billing_name,
+                'billing_phone'   => $request->billing_phone,
+                'billing_email'   => $request->billing_email,
                 'billing_address' => $request->billing_address,
-                'billing_city' => $request->billing_city,
-                'billing_state' => $request->billing_state,
+                'billing_city'    => $request->billing_city,
+                'billing_state'   => $request->billing_state,
                 'billing_pincode' => $request->billing_pincode,
-                
+
                 'is_shipping_same' => $isShippingSame,
-                'shipping_name' => $isShippingSame ? null : $request->shipping_name,
-                'shipping_phone' => $isShippingSame ? null : $request->shipping_phone,
+                'shipping_name'    => $isShippingSame ? null : $request->shipping_name,
+                'shipping_phone'   => $isShippingSame ? null : $request->shipping_phone,
                 'shipping_address' => $isShippingSame ? null : $request->shipping_address,
-                'shipping_city' => $isShippingSame ? null : $request->shipping_city,
-                'shipping_state' => $isShippingSame ? null : $request->shipping_state,
+                'shipping_city'    => $isShippingSame ? null : $request->shipping_city,
+                'shipping_state'   => $isShippingSame ? null : $request->shipping_state,
                 'shipping_pincode' => $isShippingSame ? null : $request->shipping_pincode,
             ]);
 
@@ -106,14 +106,14 @@ class CheckoutController extends Controller
 
             // Allocate UPI account via Smart Rotation Service
             $upiService = new \App\Services\UpiRotationService();
-            $upiResult = $upiService->assignUpiToOrder($order);
+            $upiService->assignUpiToOrder($order);
 
-            // Create Pending Transaction
+            // Create Pending Transaction — amount = final discounted total
             \App\Models\Transaction::create([
-                'order_id' => $order->id,
+                'order_id'       => $order->id,
                 'payment_method' => 'upi',
-                'amount' => $totalAmount,
-                'status' => 'pending',
+                'amount'         => $totals['total_amount'],
+                'status'         => 'pending',
             ]);
 
             DB::commit();

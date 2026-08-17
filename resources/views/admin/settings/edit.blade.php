@@ -125,6 +125,36 @@
             </div>
         </div>
 
+        <!-- Discount Settings -->
+        <div class="col-lg-12 mb-4">
+            <div class="card shadow-sm border-0 border-start border-danger border-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="m-0 font-weight-bold text-danger"><i class="bi bi-percent me-2"></i>Discount Settings (Admin Only)</h6>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Global Discount Percentage (%)</label>
+                            <div class="input-group">
+                                <input type="number" step="0.01" min="0" max="100" name="overall_discount_percentage"
+                                       class="form-control form-control-lg @error('overall_discount_percentage') is-invalid @enderror"
+                                       value="{{ old('overall_discount_percentage', $settings->overall_discount_percentage ?? 50) }}">
+                                <span class="input-group-text">%</span>
+                            </div>
+                            <small class="text-muted">This discount is applied to every customer order automatically. Customers will see the discount amount but <strong>never</strong> the percentage.</small>
+                            @error('overall_discount_percentage')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="col-md-6 d-flex align-items-center">
+                            <div class="alert alert-warning border-0 mb-0 w-100">
+                                <i class="bi bi-shield-lock me-2"></i>
+                                <strong>Admin Only:</strong> This field is only visible in the admin panel. Customers only see the discount rupee amount (e.g. -₹1,500), never the percentage.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- GST Settings -->
         <div class="col-lg-12 mb-4">
             <div class="card shadow-sm border-0">
