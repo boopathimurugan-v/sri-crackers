@@ -230,14 +230,16 @@
                         <td class="text-right">₹{{ number_format($item->total, 2) }}</td>
                     </tr>
                 @endforeach
-                <tr>
-                    <td colspan="3" class="text-right" style="color: #64748b; padding: 10px;">Net Amount:</td>
-                    <td class="text-right" style="padding: 10px;">₹{{ number_format($order->net_amount ?? $order->subtotal, 2) }}</td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="text-right" style="color: #16a34a; padding: 10px;">Discount:</td>
-                    <td class="text-right" style="color: #16a34a; padding: 10px;">-₹{{ number_format($order->discount_amount ?? 0, 2) }}</td>
-                </tr>
+                @if($order->gst_amount > 0)
+                    <tr>
+                        <td colspan="3" class="text-right" style="color: #64748b;">Subtotal:</td>
+                        <td class="text-right">₹{{ number_format($order->subtotal, 2) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right" style="color: #64748b;">GST Amount:</td>
+                        <td class="text-right">₹{{ number_format($order->gst_amount, 2) }}</td>
+                    </tr>
+                @endif
                 <tr>
                     <td colspan="3" class="text-right grand-total">Grand Total:</td>
                     <td class="text-right grand-total">₹{{ number_format($order->total_amount, 2) }}</td>

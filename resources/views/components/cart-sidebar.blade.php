@@ -89,23 +89,13 @@
                             </ul>
                         </div>
 
-                        <!-- Cart Footer -->
+                        {!! '<!-- Cart Footer -->' !!}
                         <div class="border-t border-slate-200 px-4 py-6 sm:px-6 bg-slate-50" x-show="cart.length > 0">
-                            <div class="space-y-2 mb-4">
-                                <div class="flex justify-between text-sm text-slate-600">
-                                    <p class="font-medium">Net Amount</p>
-                                    <p class="font-bold text-slate-900" x-text="'₹' + netAmount.toLocaleString('en-IN')"></p>
-                                </div>
-                                <div class="flex justify-between text-sm text-green-700">
-                                    <p class="font-medium">Discount</p>
-                                    <p class="font-bold" x-text="'-₹' + discountAmount.toLocaleString('en-IN')"></p>
-                                </div>
-                                <div class="flex justify-between text-base font-bold text-slate-900 border-t border-slate-200 pt-2">
-                                    <p>Total Amount</p>
-                                    <p x-text="'₹' + finalPayable.toLocaleString('en-IN')"></p>
-                                </div>
+                            <div class="flex justify-between text-base font-bold text-slate-900 mb-4">
+                                <p>Subtotal</p>
+                                <p x-text="'₹' + cartTotal.toLocaleString('en-IN')"></p>
                             </div>
-                            <p class="mt-0.5 text-xs text-slate-500 mb-6">Discount applied at checkout.</p>
+                            <p class="mt-0.5 text-xs text-slate-500 mb-6">Shipping and taxes calculated at checkout.</p>
                             <div class="mt-6">
                                 <a href="{{ route('checkout') }}" class="flex items-center justify-center rounded-xl border border-transparent bg-red-600 px-6 py-3.5 text-base font-bold text-white shadow-md hover:bg-red-700 transition">
                                     Proceed to Checkout

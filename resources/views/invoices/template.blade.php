@@ -147,14 +147,23 @@
             </tbody>
         </table>
 
+        @php
+            $cgst = $order->gst_amount / 2;
+            $sgst = $order->gst_amount / 2;
+        @endphp
+
         <table class="totals-table">
             <tr>
-                <td style="color: #64748b;">Net Amount</td>
-                <td class="right">₹{{ number_format($order->net_amount ?? $order->subtotal, 2) }}</td>
+                <td style="color: #64748b;">Taxable Value</td>
+                <td class="right">₹{{ number_format($order->subtotal, 2) }}</td>
             </tr>
             <tr>
-                <td style="color: #16a34a;">Discount</td>
-                <td class="right" style="color: #16a34a;">-₹{{ number_format($order->discount_amount ?? 0, 2) }}</td>
+                <td style="color: #64748b;">CGST</td>
+                <td class="right">₹{{ number_format($cgst, 2) }}</td>
+            </tr>
+            <tr>
+                <td style="color: #64748b;">SGST</td>
+                <td class="right">₹{{ number_format($sgst, 2) }}</td>
             </tr>
             <tr class="total-row">
                 <td>Grand Total</td>
