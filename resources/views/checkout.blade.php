@@ -3,9 +3,6 @@
 @section('title', 'Checkout')
 
 @section('content')
-@php
-    $activeUpi = isset($activeUpi) && $activeUpi ? $activeUpi : \App\Models\UpiAccount::where('is_active', true)->orderBy('display_order', 'asc')->orderBy('id', 'asc')->first();
-@endphp
 
 <div class="bg-amber-50/50 py-8 border-b border-amber-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -33,11 +30,22 @@
         </div>
     @endif
 
-    <form action="{{ route('checkout.store') }}" method="POST" enctype="multipart/form-data" id="checkout-form">
+    <div id="checkout-ajax-errors" class="hidden bg-red-50 border-l-4 border-red-500 p-4 mb-8 rounded-r-xl shadow-sm">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <i data-lucide="alert-circle" class="h-5 w-5 text-red-500"></i>
+            </div>
+            <div class="ml-3">
+                <h3 class="text-sm font-bold text-red-800" id="checkout-ajax-error-title">There were some problems with your order.</h3>
+                <ul class="mt-2 text-sm text-red-700 list-disc list-inside" id="checkout-ajax-error-list"></ul>
+            </div>
+        </div>
+    </div>
+
+    <form action="{{ route('checkout.store') }}" method="POST" id="checkout-form">
         @csrf
         <input type="hidden" name="cart_data" :value="JSON.stringify(cart)">
-        <input type="hidden" name="payment_method" value="upi">
-        
+
         <div class="flex flex-col lg:flex-row gap-8">
             
             {!! '<!-- Left Column: Forms -->' !!}
@@ -125,93 +133,13 @@
 
             </div>
 
-            {!! '<!-- Right Column: Order Summary & Premium Single UPI Payment Card -->' !!}
+            {!! '<!-- Right Column: Order Summary -->' !!}
             <div class="w-full lg:w-5/12 space-y-8">
-                
-                {!! '<!-- PREMIUM SECURE UPI PAYMENT CARD -->' !!}
-                <div class="bg-white rounded-3xl border-2 border-amber-400 shadow-xl shadow-amber-100/50 p-6 sm:p-8 relative overflow-hidden">
-                    <div class="flex items-center justify-between mb-4">
-                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs uppercase tracking-wider rounded-full shadow-sm">
-                            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i> Secure UPI Payment
-                        </span>
-                        <span class="text-xs font-bold text-slate-400 uppercase">Smart Allocated</span>
-                    </div>
-
-                    <h2 class="text-xl font-extrabold text-slate-900 mb-2">Pay via Dynamic QR Code</h2>
-                    <p class="text-xs text-slate-500 mb-6">Scan using Google Pay, PhonePe, Paytm, BHIM or any UPI App</p>
-                    
-                    @if($activeUpi)
-                        <!-- DYNAMIC QR CODE DISPLAY -->
-                        <div class="relative w-52 h-52 mx-auto bg-white p-3 border-2 border-dashed border-amber-400 rounded-2xl shadow-inner mb-6 flex items-center justify-center">
-                            @if($activeUpi->qr_image && file_exists(public_path('storage/' . $activeUpi->qr_image)))
-                                <img src="{{ asset('storage/' . $activeUpi->qr_image) }}" alt="UPI QR Code" class="w-full h-full object-contain rounded-xl">
-                            @else
-                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data={{ urlencode('upi://pay?pa='.$activeUpi->upi_id.'&pn='.$activeUpi->account_holder_name.'&cu=INR') }}" alt="UPI QR Code" class="w-full h-full object-contain rounded-xl">
-                            @endif
-                        </div>
-
-                        <!-- UPI ACCOUNT DETAILS -->
-                        <div class="bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 mb-6 text-xs space-y-2.5">
-                            <div class="flex justify-between items-center pb-2 border-b border-amber-200/60">
-                                <span class="text-amber-800 font-bold uppercase">Account Name</span>
-                                <span class="font-extrabold text-slate-900">{{ $activeUpi->account_holder_name ?? $activeUpi->name }}</span>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-amber-800 font-bold uppercase">UPI ID</span>
-                                <div class="flex items-center gap-2">
-                                    <span id="checkoutUpiId" class="font-mono font-bold text-amber-700 text-sm">{{ $activeUpi->upi_id }}</span>
-                                    <button type="button" onclick="copyCheckoutUpi()" class="bg-amber-200/80 hover:bg-amber-300 text-amber-900 font-bold px-2 py-0.5 rounded text-[10px] transition">
-                                        Copy
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        <div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-xl text-xs font-bold mb-6 text-center">
-                            Online UPI payment is temporarily unavailable. Please contact customer support.
-                        </div>
-                    @endif
-
-                    <!-- STEP BY STEP PAYMENT GUIDE -->
-                    <div class="mb-6 p-4 bg-slate-50 border border-slate-200/80 rounded-2xl">
-                        <div class="text-[11px] font-extrabold text-slate-700 uppercase tracking-wider mb-3 text-center">Step-by-Step Payment Guide</div>
-                        <div class="grid grid-cols-2 gap-2 text-center text-xs">
-                            <div class="p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
-                                <span class="font-extrabold text-amber-600 block mb-0.5">Step 1</span>
-                                <span class="text-slate-800 font-bold text-[11px]">Scan QR Code</span>
-                            </div>
-                            <div class="p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
-                                <span class="font-extrabold text-amber-600 block mb-0.5">Step 2</span>
-                                <span class="text-slate-800 font-bold text-[11px]">Complete Payment</span>
-                            </div>
-                            <div class="p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
-                                <span class="font-extrabold text-amber-600 block mb-0.5">Step 3</span>
-                                <span class="text-slate-800 font-bold text-[11px]">Upload Screenshot</span>
-                            </div>
-                            <div class="p-2.5 bg-white rounded-xl border border-slate-200 shadow-2xs">
-                                <span class="font-extrabold text-amber-600 block mb-0.5">Step 4</span>
-                                <span class="text-slate-800 font-bold text-[11px]">Click Place Order</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PAYMENT SCREENSHOT UPLOAD FIELD -->
-                    <div class="mb-2">
-                        <label for="payment_screenshot" class="block text-xs font-extrabold text-slate-800 uppercase tracking-wider mb-1.5 flex justify-between items-center">
-                            <span>Upload Payment Screenshot <span class="text-red-500">*</span></span>
-                            <span class="text-[10px] text-amber-700 font-bold bg-amber-100 px-2 py-0.5 rounded">JPG, PNG (Max 5MB)</span>
-                        </label>
-                        <input type="file" id="payment_screenshot" name="payment_screenshot" accept="image/jpeg,image/png,image/jpg,image/webp" required 
-                               class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 outline-none text-xs bg-slate-50 focus:bg-white shadow-sm transition">
-                        <p class="text-[11px] text-slate-500 mt-1.5">Required. Please attach a clear screenshot image of your completed UPI transaction.</p>
-                    </div>
-
-                </div>
 
                 {!! '<!-- Order Summary -->' !!}
                 <div class="bg-slate-50 rounded-3xl border border-slate-200 shadow-sm p-6 sm:p-8 sticky top-24">
-                    <h2 class="text-xl font-bold text-slate-900 mb-6">Your Order Summary</h2>
-                    
+                    <h2 class="text-xl font-bold text-slate-900 mb-6">Order Summary</h2>
+
                     <div x-show="cart.length === 0" class="text-center text-slate-500 py-8">
                         Your cart is empty.
                     </div>
@@ -229,29 +157,34 @@
                             </template>
                         </ul>
 
-                        <div class="border-t border-slate-200 pt-4 space-y-3">
+                        <div class="border-t border-slate-200 pt-4 space-y-2">
                             <div class="flex justify-between text-sm text-slate-600">
-                                <span>Subtotal</span>
-                                <span class="font-bold text-slate-900" x-text="'₹' + totalPayable.toLocaleString('en-IN')"></span>
+                                <span>Net Amount</span>
+                                <span class="font-bold text-slate-900" x-text="'₹' + netAmount.toLocaleString('en-IN')"></span>
                             </div>
-                            <div class="flex justify-between text-sm text-slate-600" x-show="gstEnabled">
-                                <span>GST (<span x-text="gstPercentage"></span>%)</span>
-                                <span class="font-bold text-slate-900" x-text="'₹' + totalGst.toLocaleString('en-IN')"></span>
+                            <div class="flex justify-between text-sm text-green-700">
+                                <span>Discount</span>
+                                <span class="font-bold" x-text="'-₹' + discountAmount.toLocaleString('en-IN')"></span>
                             </div>
                         </div>
 
                         <div class="border-t border-slate-200 pt-4 mt-4">
                             <div class="flex justify-between items-center mb-6">
-                                <span class="text-lg font-bold text-slate-900">Total Payable</span>
+                                <span class="text-lg font-bold text-slate-900">Total Amount</span>
                                 <span class="text-2xl font-black text-amber-600" x-text="'₹' + finalPayable.toLocaleString('en-IN')"></span>
                             </div>
 
                             <!-- LARGE FULL WIDTH PREMIUM GOLD GRADIENT PLACE ORDER BUTTON -->
-                            <button type="submit" class="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-black py-4.5 rounded-2xl shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-200 transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide text-base">
-                                <i data-lucide="check-circle-2" class="w-6 h-6"></i> Place Order Now
+                            <button type="submit" id="place-order-btn" class="w-full bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-black py-4.5 rounded-2xl shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-200 transform hover:-translate-y-0.5 active:scale-95 flex items-center justify-center gap-2 uppercase tracking-wide text-base disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0">
+                                <span id="place-order-btn-content" class="flex items-center justify-center gap-2">
+                                    <i data-lucide="check-circle-2" class="w-6 h-6"></i> Place Order
+                                </span>
                             </button>
-                            
+
                             <p class="text-center text-xs text-slate-500 mt-4">
+                                No online payment required. Our team will contact you to confirm your order and payment.
+                            </p>
+                            <p class="text-center text-xs text-slate-500 mt-1">
                                 By placing your order, you agree to our Terms & Conditions.
                             </p>
                         </div>
@@ -264,10 +197,96 @@
 </div>
 
 <script>
-    function copyCheckoutUpi() {
-        const text = document.getElementById('checkoutUpiId').innerText;
-        navigator.clipboard.writeText(text);
-        alert('UPI ID copied to clipboard: ' + text);
-    }
+    document.getElementById('checkout-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const btn = document.getElementById('place-order-btn');
+        const btnContent = document.getElementById('place-order-btn-content');
+        const errorBox = document.getElementById('checkout-ajax-errors');
+        const errorTitle = document.getElementById('checkout-ajax-error-title');
+        const errorList = document.getElementById('checkout-ajax-error-list');
+
+        if (btn.disabled) {
+            // Already submitting — ignore extra clicks instead of firing a second request.
+            return;
+        }
+
+        const originalContent = btnContent.innerHTML;
+
+        function showErrors(message, errors) {
+            errorList.innerHTML = '';
+
+            const messages = [];
+            if (errors && typeof errors === 'object') {
+                Object.values(errors).forEach(function (value) {
+                    if (Array.isArray(value)) {
+                        value.forEach(function (v) { messages.push(v); });
+                    } else if (value) {
+                        messages.push(value);
+                    }
+                });
+            }
+            if (messages.length === 0 && message) {
+                messages.push(message);
+            }
+
+            messages.forEach(function (msg) {
+                const li = document.createElement('li');
+                li.textContent = msg;
+                errorList.appendChild(li);
+            });
+
+            errorTitle.textContent = message || 'There were some problems with your order.';
+            errorBox.classList.remove('hidden');
+            errorBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function setLoading(isLoading) {
+            btn.disabled = isLoading;
+            if (isLoading) {
+                btnContent.innerHTML = '<svg class="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path></svg> Placing Order...';
+            } else {
+                btnContent.innerHTML = originalContent;
+                if (window.lucide) { window.lucide.createIcons(); }
+            }
+        }
+
+        errorBox.classList.add('hidden');
+        setLoading(true);
+
+        const formData = new FormData(form);
+        const token = form.querySelector('input[name="_token"]').value;
+
+        fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': token,
+                'Accept': 'application/json',
+            },
+            body: formData,
+        })
+            .then(function (response) {
+                return response.json().then(function (data) {
+                    return { status: response.status, ok: response.ok, data: data };
+                });
+            })
+            .then(function (result) {
+                if (result.ok && result.data && result.data.success) {
+                    window.location.href = result.data.redirect;
+                    return; // keep the button disabled/spinning through the redirect
+                }
+
+                setLoading(false);
+                showErrors(
+                    (result.data && result.data.message) || 'Something went wrong. Please try again.',
+                    result.data && result.data.errors
+                );
+            })
+            .catch(function () {
+                setLoading(false);
+                showErrors('Could not reach the server. Please check your connection and try again.', null);
+            });
+    });
 </script>
 @endsection

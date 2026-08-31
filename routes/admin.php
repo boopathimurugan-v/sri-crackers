@@ -16,7 +16,7 @@ Route::prefix('admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
         
         // Orders & Invoices
-        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'update'])->names('admin.orders');
+        Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class)->only(['index', 'show', 'edit', 'update', 'destroy'])->names('admin.orders');
         Route::get('invoices/{order_number}', [\App\Http\Controllers\InvoiceController::class, 'show'])->name('admin.invoices.show');
         Route::get('invoices/{order_number}/download', [\App\Http\Controllers\InvoiceController::class, 'download'])->name('admin.invoices.download');
 

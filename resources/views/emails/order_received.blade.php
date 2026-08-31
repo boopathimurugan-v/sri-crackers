@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmation - Sri Crackers</title>
+    <title>Order Received - Sri Crackers</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -79,7 +79,7 @@
             text-align: right;
         }
         .badge-status {
-            background-color: #059669;
+            background-color: #d97706;
             color: #ffffff;
             padding: 3px 10px;
             border-radius: 20px;
@@ -123,21 +123,6 @@
             font-weight: 800;
             color: #910A67;
         }
-        .cta-container {
-            text-align: center;
-            margin: 30px 0;
-        }
-        .btn-download {
-            background-color: #910A67;
-            color: #ffffff !important;
-            text-decoration: none;
-            padding: 14px 28px;
-            font-size: 14px;
-            font-weight: 700;
-            border-radius: 30px;
-            display: inline-block;
-            box-shadow: 0 4px 12px rgba(145, 10, 103, 0.3);
-        }
         .company-contact {
             background-color: #f8fafc;
             border-radius: 12px;
@@ -163,18 +148,26 @@
 <body>
 
 <div class="container">
-    
+
     <!-- HEADER -->
     <div class="header">
         <h1>SRI CRACKERS</h1>
-        <p>Premium Sivakasi Fireworks Since 1985 | Order Confirmation</p>
+        <p>Premium Sivakasi Fireworks Since 1985 | Order Received</p>
     </div>
 
     <!-- CONTENT -->
     <div class="content">
-        <div class="greeting">Hello {{ $order->billing_name }},</div>
+        <div class="greeting">Dear {{ $order->billing_name }},</div>
         <div class="thank-you">
-            Thank you for placing your order with <strong>SRI CRACKERS</strong>! Your payment has been confirmed and your order has been marked as <strong>Confirmed</strong>. Your official PDF Tax Invoice is attached to this email.
+            Thank you for placing your order with <strong>SRI CRACKERS</strong>.<br><br>
+            Your order <strong>#{{ $order->order_number }}</strong> has been received successfully.<br><br>
+            Net Amount: <strong>₹{{ number_format($order->net_amount ?? $order->subtotal, 2) }}</strong><br>
+            Discount: <strong>₹{{ number_format($order->discount_amount, 2) }}</strong><br>
+            Total Amount: <strong>₹{{ number_format($order->total_amount, 2) }}</strong><br><br>
+            Payment Status:<br>
+            <strong>Payment Pending</strong><br><br>
+            Our Sri Crackers team will contact you shortly regarding the payment method and order confirmation.<br><br>
+            <strong>No online payment is required at this stage.</strong> Please wait for our team to contact you.
         </div>
 
         <!-- ORDER INFO CARD -->
@@ -191,7 +184,7 @@
                 <tr>
                     <td class="info-label">Order Status:</td>
                     <td class="info-val">
-                        <span class="badge-status">Confirmed</span>
+                        <span class="badge-status">Pending Confirmation</span>
                     </td>
                 </tr>
             </table>
@@ -249,11 +242,9 @@
             </tbody>
         </table>
 
-        <!-- CTA BUTTON -->
-        <div class="cta-container">
-            <a href="{{ route('invoices.public-download', $order->order_number) }}" class="btn-download" target="_blank">
-                📥 Download Invoice PDF
-            </a>
+        <div class="thank-you" style="margin-bottom: 0;">
+            Thank you,<br>
+            SRI CRACKERS Team
         </div>
 
         <!-- COMPANY CONTACT DETAILS -->

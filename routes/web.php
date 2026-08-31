@@ -4,7 +4,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderTrackingController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\NewsletterController;
@@ -54,8 +53,6 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{order_number}', [CheckoutController::class, 'success'])->name('checkout.success');
 
-Route::get('/payment/process/{order_number}', [PaymentController::class, 'process'])->name('payment.process');
-Route::post('/payment/callback/{transaction}', [PaymentController::class, 'callback'])->name('payment.callback');
 Route::get('/invoices/download/{order_number}', [\App\Http\Controllers\InvoiceController::class, 'publicDownload'])->name('invoices.public-download');
 
 Route::get('/track-order', [OrderTrackingController::class, 'index'])->name('track-order');

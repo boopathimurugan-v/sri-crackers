@@ -167,14 +167,18 @@
                                 </td>
                                 <td>{{ $order->user ? $order->user->name : 'Guest' }}</td>
                                 <td>
-                                    @if($order->status == 'pending')
-                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    @if($order->status == 'pending_confirmation')
+                                        <span class="badge bg-warning text-dark">Pending Confirmation</span>
+                                    @elseif($order->status == 'confirmed')
+                                        <span class="badge bg-info">Confirmed</span>
                                     @elseif($order->status == 'processing')
-                                        <span class="badge bg-info">Processing</span>
+                                        <span class="badge bg-primary">Processing</span>
                                     @elseif($order->status == 'completed')
                                         <span class="badge bg-success">Completed</span>
+                                    @elseif($order->status == 'cancelled')
+                                        <span class="badge bg-danger">Cancelled</span>
                                     @else
-                                        <span class="badge bg-secondary">{{ ucfirst($order->status) }}</span>
+                                        <span class="badge bg-secondary">{{ ucwords(str_replace('_', ' ', $order->status)) }}</span>
                                     @endif
                                 </td>
                                 <td class="text-end fw-bold">₹{{ number_format($order->total_amount, 2) }}</td>

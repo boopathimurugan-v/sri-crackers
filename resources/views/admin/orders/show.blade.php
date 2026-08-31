@@ -9,14 +9,26 @@
         <p class="text-muted mb-0">Placed on {{ $order->created_at->format('l, F j, Y \a\t h:i A') }}</p>
     </div>
     <div>
+        <a href="{{ route('admin.invoices.show', $order->order_number) }}" class="btn btn-outline-dark shadow-sm me-2">
+            <i class="bi bi-eye"></i> View Invoice
+        </a>
         <a href="{{ route('admin.invoices.download', $order->order_number) }}" class="btn btn-dark shadow-sm me-2">
             <i class="bi bi-file-earmark-pdf"></i> Download Invoice
+        </a>
+        <a href="{{ route('admin.orders.edit', $order) }}" class="btn btn-primary shadow-sm me-2">
+            <i class="bi bi-pencil"></i> Edit
         </a>
         <a href="{{ route('admin.orders.index') }}" class="btn btn-light border shadow-sm">
             <i class="bi bi-arrow-left"></i> Back to Orders
         </a>
     </div>
 </div>
+
+@if(session('success'))
+    <div class="alert alert-success border-0 shadow-sm py-2 px-3 mb-4">
+        <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
+    </div>
+@endif
 
 <div class="row">
     {!! '<!-- Main Order Info -->' !!}
@@ -57,13 +69,21 @@
                         </tbody>
                         <tfoot class="border-top">
                             <tr>
-                                <td colspan="3" class="text-end text-muted pt-3">Subtotal:</td>
-                                <td class="text-end fw-bold pt-3">₹{{ number_format($order->subtotal, 2) }}</td>
+                                <td colspan="3" class="text-end text-muted pt-3">Net Amount:</td>
+                                <td class="text-end fw-bold pt-3">₹{{ number_format($order->net_amount ?? $order->subtotal, 2) }}</td>
                             </tr>
+                            @if($order->discount_amount > 0)
+                            <tr>
+                                <td colspan="3" class="text-end text-muted">Discount:</td>
+                                <td class="text-end fw-bold text-success">-₹{{ number_format($order->discount_amount, 2) }}</td>
+                            </tr>
+                            @endif
+                            @if($order->gst_amount > 0)
                             <tr>
                                 <td colspan="3" class="text-end text-muted pb-3">GST:</td>
                                 <td class="text-end fw-bold pb-3">₹{{ number_format($order->gst_amount, 2) }}</td>
                             </tr>
+                            @endif
                             <tr class="bg-light rounded">
                                 <td colspan="3" class="text-end fs-5 fw-bold py-3">Total:</td>
                                 <td class="text-end fs-5 fw-black text-danger py-3">₹{{ number_format($order->total_amount, 2) }}</td>
@@ -115,37 +135,50 @@
         </div>
     </div>
 
-    {!! '<!-- Sidebar Info & Status Update -->' !!}
+    {!! '<!-- Sidebar Info & Status -->' !!}
     <div class="col-lg-4">
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4">
-                <h5 class="mb-0 fw-bold">Update Status</h5>
+                <h5 class="mb-0 fw-bold">Order Status</h5>
             </div>
             <div class="card-body p-4">
-                
-                @if(session('success'))
-                    <div class="alert alert-success border-0 shadow-sm py-2 px-3 mb-4">
-                        <i class="bi bi-check-circle me-1"></i> {{ session('success') }}
-                    </div>
-                @endif
+                @php
+                    $statusColors = [
+                        'pending_confirmation' => 'bg-warning text-dark',
+                        'confirmed' => 'bg-info text-white',
+                        'processing' => 'bg-primary text-white',
+                        'completed' => 'bg-success text-white',
+                        'cancelled' => 'bg-danger text-white',
+                    ];
+                    $paymentStatusColors = [
+                        'payment_pending' => 'bg-warning text-dark',
+                        'payment_confirmed' => 'bg-success text-white',
+                    ];
+                @endphp
 
-                <form action="{{ route('admin.orders.update', $order) }}" method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-muted small text-uppercase d-block" style="letter-spacing: 1px;">Order Status</label>
+                    <span class="badge {{ $statusColors[$order->status] ?? 'bg-secondary text-white' }} rounded-pill px-3 py-2">
+                        {{ ucwords(str_replace('_', ' ', $order->status)) }}
+                    </span>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-muted small text-uppercase d-block" style="letter-spacing: 1px;">Payment Status</label>
+                    <span class="badge {{ $paymentStatusColors[$order->payment_status] ?? 'bg-secondary text-white' }} rounded-pill px-3 py-2">
+                        {{ ucwords(str_replace('_', ' ', $order->payment_status ?? 'payment_pending')) }}
+                    </span>
+                </div>
+
+                <a href="{{ route('admin.orders.edit', $order) }}" class="btn btn-primary w-100 py-3 fw-bold shadow-sm mb-2">
+                    <i class="bi bi-pencil me-1"></i> Edit Order
+                </a>
+
+                <form action="{{ route('admin.orders.destroy', $order) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this order? This cannot be undone.');">
                     @csrf
-                    @method('PUT')
-                    
-                    <div class="mb-4">
-                        <label class="form-label fw-bold text-muted small text-uppercase" style="letter-spacing: 1px;">Current Status</label>
-                        <select name="status" class="form-select form-select-lg shadow-sm" required>
-                            <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>🟡 Pending</option>
-                            <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>🔵 Processing</option>
-                            <option value="shipped" {{ $order->status == 'shipped' ? 'selected' : '' }}>🟣 Shipped</option>
-                            <option value="delivered" {{ $order->status == 'delivered' ? 'selected' : '' }}>🟢 Delivered</option>
-                            <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>🔴 Cancelled</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
-                        <i class="bi bi-save me-1"></i> Save Changes
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-danger w-100 py-3 fw-bold">
+                        <i class="bi bi-trash me-1"></i> Delete Order
                     </button>
                 </form>
             </div>

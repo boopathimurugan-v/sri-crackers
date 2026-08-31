@@ -68,7 +68,7 @@ class ReportController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('Order ID', 'Invoice Number', 'Date', 'Customer Name', 'Customer Email', 'Payment Method', 'Payment Status', 'Order Status', 'Total Amount');
+        $columns = array('Order ID', 'Invoice Number', 'Date', 'Customer Name', 'Customer Email', 'Payment Status', 'Order Status', 'Total Amount');
 
         $callback = function() use($orders, $columns) {
             $file = fopen('php://output', 'w');
@@ -80,12 +80,11 @@ class ReportController extends Controller
                 $row['Date']    = $order->created_at->format('Y-m-d H:i');
                 $row['Customer Name']  = $order->user ? $order->user->name : 'Guest';
                 $row['Customer Email'] = $order->user ? $order->user->email : 'N/A';
-                $row['Payment Method']  = $order->payment_method;
                 $row['Payment Status']  = $order->payment_status;
                 $row['Order Status']  = $order->status;
                 $row['Total Amount']  = $order->total_amount;
 
-                fputcsv($file, array($row['Order ID'], $row['Invoice Number'], $row['Date'], $row['Customer Name'], $row['Customer Email'], $row['Payment Method'], $row['Payment Status'], $row['Order Status'], $row['Total Amount']));
+                fputcsv($file, array($row['Order ID'], $row['Invoice Number'], $row['Date'], $row['Customer Name'], $row['Customer Email'], $row['Payment Status'], $row['Order Status'], $row['Total Amount']));
             }
 
             fclose($file);

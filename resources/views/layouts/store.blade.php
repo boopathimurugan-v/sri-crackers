@@ -61,7 +61,10 @@
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-50 text-slate-800 font-sans" x-data="crackerStore()" data-gst-enabled="{{ isset($globalSettings) && $globalSettings->gst_enabled ? 'true' : 'false' }}" data-gst-percentage="{{ isset($globalSettings) ? $globalSettings->gst_percentage : 0 }}">
+<body class="bg-gray-50 text-slate-800 font-sans" x-data="crackerStore()"
+    data-gst-enabled="{{ isset($globalSettings) && $globalSettings->gst_enabled ? 'true' : 'false' }}"
+    data-gst-percentage="{{ isset($globalSettings) ? $globalSettings->gst_percentage : 0 }}"
+    data-discount-percentage="{{ isset($globalSettings) && $globalSettings->overall_discount_percentage ? $globalSettings->overall_discount_percentage : 0 }}">
 
     <script>
         function crackerStore() {
@@ -69,18 +72,20 @@
                 isMenuOpen: false,
                 isCartOpen: false,
                 cart: JSON.parse(localStorage.getItem('cracker_cart') || '[]'),
-                gstEnabled: document.body.dataset.gstEnabled === 'true',
-                gstPercentage: parseFloat(document.body.dataset.gstPercentage || 0),
-                
+
+                // Global discount % set by Admin — never shown to customers
+                discountPercentage: parseFloat(document.body.dataset.discountPercentage || 0),
+
                 saveCart() {
                     localStorage.setItem('cracker_cart', JSON.stringify(this.cart));
                 },
-                
+
                 getQty(productId) {
                     const item = this.cart.find(i => i.id === productId);
                     return item ? item.quantity : 0;
                 },
-                
+
+                // Called from product rows: updateQty(product, +1 or -1)
                 updateQty(product, amount) {
                     const index = this.cart.findIndex(i => i.id === product.id);
                     if (index > -1) {
@@ -92,44 +97,61 @@
                         }
                     } else if (amount > 0) {
                         this.cart.push({
-                            id: product.id,
-                            name: product.name,
-                            image: product.main_image || product.image_path,
-                            mrp: parseFloat(product.mrp),
-                            price: parseFloat(product.offer_price),
+                            id:       product.id,
+                            name:     product.english_name || product.name,
+                            image:    product.main_image || product.image_path,
+                            price:    parseFloat(product.price), // Admin selling price
                             quantity: amount
                         });
                     }
                     this.saveCart();
                 },
-                
-                get cartCount() {
-                    return this.cart.reduce((count, item) => count + item.quantity, 0);
-                },
-                
-                get totalMrp() {
-                    return this.cart.reduce((total, item) => total + (item.mrp * item.quantity), 0);
-                },
-                
-                get totalPayable() {
-                    return this.cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-                },
-                
-                get totalSavings() {
-                    return this.totalMrp - this.totalPayable;
-                },
-                
-                get totalGst() {
-                    if (this.gstEnabled) {
-                        return (this.totalPayable * this.gstPercentage) / 100;
+
+                // Called from cart sidebar
+                updateQuantity(index, delta) {
+                    const newQty = this.cart[index].quantity + delta;
+                    if (newQty > 0) {
+                        this.cart[index].quantity = newQty;
+                    } else {
+                        this.cart.splice(index, 1);
                     }
-                    return 0;
+                    this.saveCart();
                 },
-                
+
+                removeFromCart(index) {
+                    this.cart.splice(index, 1);
+                    this.saveCart();
+                },
+
+                // Total number of units in cart
+                get cartCount() {
+                    return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+                },
+
+                // Net Amount = sum of (selling price × qty) — BEFORE discount
+                get netAmount() {
+                    return this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                },
+
+                // Discount Amount = netAmount × discountPercentage / 100
+                get discountAmount() {
+                    return Math.round((this.netAmount * this.discountPercentage / 100) * 100) / 100;
+                },
+
+                // Final Total = Net Amount − Discount Amount
                 get finalPayable() {
-                    return this.totalPayable + this.totalGst;
-                }
-            }
+                    return Math.round((this.netAmount - this.discountAmount) * 100) / 100;
+                },
+
+                // Aliases so older template references still resolve
+                get totalPayable()  { return this.netAmount; },
+                get cartTotal()     { return this.finalPayable; },
+                get totalMrp()      { return this.netAmount; },
+                get totalSavings()  { return this.discountAmount; },
+                get totalGst()      { return 0; },
+                get gstEnabled()    { return false; },
+                get gstPercentage() { return 0; },
+            };
         }
     </script>
 

@@ -160,8 +160,8 @@
                             </td>
                             <td class="fw-bold text-dark">₹{{ number_format($order->total_amount, 2) }}</td>
                             <td>
-                                <span class="badge {{ $order->status === 'processing' || $order->status === 'delivered' ? 'bg-success' : 'bg-warning text-dark' }}">
-                                    {{ ucfirst($order->status) }}
+                                <span class="badge {{ in_array($order->status, ['completed', 'processing', 'confirmed']) ? 'bg-success' : 'bg-warning text-dark' }}">
+                                    {{ ucwords(str_replace('_', ' ', $order->status)) }}
                                 </span>
                             </td>
                             <td class="text-end pe-4 small text-muted">

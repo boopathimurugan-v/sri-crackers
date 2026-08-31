@@ -54,16 +54,16 @@
                     <div>
                         @php
                             $statusColors = [
-                                'pending' => 'bg-amber-100 text-amber-800 border-amber-200',
-                                'processing' => 'bg-blue-100 text-blue-800 border-blue-200',
-                                'shipped' => 'bg-purple-100 text-purple-800 border-purple-200',
-                                'delivered' => 'bg-green-100 text-green-800 border-green-200',
+                                'pending_confirmation' => 'bg-amber-100 text-amber-800 border-amber-200',
+                                'confirmed' => 'bg-blue-100 text-blue-800 border-blue-200',
+                                'processing' => 'bg-purple-100 text-purple-800 border-purple-200',
+                                'completed' => 'bg-green-100 text-green-800 border-green-200',
                                 'cancelled' => 'bg-red-100 text-red-800 border-red-200',
                             ];
                             $colorClass = $statusColors[$order->status] ?? 'bg-slate-100 text-slate-800 border-slate-200';
                         @endphp
                         <span class="px-4 py-1.5 rounded-full border text-sm font-bold uppercase tracking-wider {{ $colorClass }}">
-                            {{ $order->status }}
+                            {{ str_replace('_', ' ', $order->status) }}
                         </span>
                     </div>
                 </div>
@@ -84,13 +84,21 @@
                     
                     <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 space-y-2 text-sm text-slate-600 mb-8">
                         <div class="flex justify-between">
-                            <span>Subtotal</span>
-                            <span class="font-bold text-slate-900">₹{{ number_format($order->subtotal, 2) }}</span>
+                            <span>Net Amount</span>
+                            <span class="font-bold text-slate-900">₹{{ number_format($order->net_amount ?? $order->subtotal, 2) }}</span>
                         </div>
+                        @if($order->discount_amount > 0)
+                        <div class="flex justify-between text-green-700">
+                            <span>Discount</span>
+                            <span class="font-bold">-₹{{ number_format($order->discount_amount, 2) }}</span>
+                        </div>
+                        @endif
+                        @if($order->gst_amount > 0)
                         <div class="flex justify-between">
                             <span>GST</span>
                             <span class="font-bold text-slate-900">₹{{ number_format($order->gst_amount, 2) }}</span>
                         </div>
+                        @endif
                         <div class="flex justify-between pt-2 border-t border-slate-200 text-base">
                             <span class="font-bold text-slate-900">Total</span>
                             <span class="font-black text-red-600">₹{{ number_format($order->total_amount, 2) }}</span>

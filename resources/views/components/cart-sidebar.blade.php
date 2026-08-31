@@ -89,14 +89,23 @@
                             </ul>
                         </div>
 
-                        {!! '<!-- Cart Footer -->' !!}
+                        <!-- Cart Footer -->
                         <div class="border-t border-slate-200 px-4 py-6 sm:px-6 bg-slate-50" x-show="cart.length > 0">
-                            <div class="flex justify-between text-base font-bold text-slate-900 mb-4">
-                                <p>Subtotal</p>
-                                <p x-text="'₹' + cartTotal.toLocaleString('en-IN')"></p>
+                            <div class="space-y-2 mb-1">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-slate-500 font-medium">Net Amount</span>
+                                    <span class="font-bold text-slate-800" x-text="'₹' + netAmount.toLocaleString('en-IN')"></span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-green-700 font-medium">Discount</span>
+                                    <span class="font-bold text-green-700" x-text="'-₹' + discountAmount.toLocaleString('en-IN')"></span>
+                                </div>
                             </div>
-                            <p class="mt-0.5 text-xs text-slate-500 mb-6">Shipping and taxes calculated at checkout.</p>
-                            <div class="mt-6">
+                            <div class="border-t border-slate-300 pt-3 mt-3 flex justify-between text-base font-bold text-slate-900 mb-5">
+                                <p>Total Amount</p>
+                                <p x-text="'₹' + finalPayable.toLocaleString('en-IN')"></p>
+                            </div>
+                            <div>
                                 <a href="{{ route('checkout') }}" class="flex items-center justify-center rounded-xl border border-transparent bg-red-600 px-6 py-3.5 text-base font-bold text-white shadow-md hover:bg-red-700 transition">
                                     Proceed to Checkout
                                 </a>

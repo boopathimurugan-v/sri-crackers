@@ -132,8 +132,8 @@
                                 <span class="badge bg-light text-dark border">{{ strtoupper($order->selected_upi ?? 'UPI') }}</span>
                             </td>
                             <td>
-                                <span class="badge {{ $order->status === 'delivered' || $order->status === 'processing' ? 'bg-success' : 'bg-warning text-dark' }}">
-                                    {{ ucfirst($order->status) }}
+                                <span class="badge {{ in_array($order->status, ['completed', 'processing', 'confirmed']) ? 'bg-success' : 'bg-warning text-dark' }}">
+                                    {{ ucwords(str_replace('_', ' ', $order->status)) }}
                                 </span>
                             </td>
                             <td class="text-end fw-bold text-success">

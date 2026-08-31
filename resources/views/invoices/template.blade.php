@@ -48,10 +48,20 @@
             <a href="{{ request()->routeIs('admin.*') ? route('admin.invoices.download', $order->order_number) : route('customer.invoices.download', $order->order_number) }}" style="padding: 10px 15px; background: #0f172a; color: white; text-decoration: none; border-radius: 5px;">Download PDF</a>
         </div>
 
+        @php
+            $logoPath = public_path('images/logo-sri.png');
+            $logoDataUri = file_exists($logoPath)
+                ? 'data:image/png;base64,' . base64_encode(file_get_contents($logoPath))
+                : null;
+        @endphp
+
         <div class="header">
             <table>
                 <tr>
                     <td class="company-info">
+                        @if($logoDataUri)
+                            <img src="{{ $logoDataUri }}" alt="Sri Crackers" style="height: 60px; margin-bottom: 10px;">
+                        @endif
                         <h1 class="title">SRI CRACKERS</h1>
                         <p style="margin: 5px 0 0 0; color: #64748b;">Premium Sivakasi Fireworks Since 1985</p>
                         <div style="margin-top: 15px; font-size: 12px; color: #333;">
@@ -147,26 +157,25 @@
             </tbody>
         </table>
 
-        @php
-            $cgst = $order->gst_amount / 2;
-            $sgst = $order->gst_amount / 2;
-        @endphp
-
         <table class="totals-table">
             <tr>
-                <td style="color: #64748b;">Taxable Value</td>
-                <td class="right">₹{{ number_format($order->subtotal, 2) }}</td>
+                <td style="color: #64748b;">Net Amount</td>
+                <td class="right">₹{{ number_format($order->net_amount ?? $order->subtotal, 2) }}</td>
             </tr>
+            @if($order->discount_amount > 0)
             <tr>
-                <td style="color: #64748b;">CGST</td>
-                <td class="right">₹{{ number_format($cgst, 2) }}</td>
+                <td style="color: #64748b;">Discount</td>
+                <td class="right">-₹{{ number_format($order->discount_amount, 2) }}</td>
             </tr>
+            @endif
+            @if($order->gst_amount > 0)
             <tr>
-                <td style="color: #64748b;">SGST</td>
-                <td class="right">₹{{ number_format($sgst, 2) }}</td>
+                <td style="color: #64748b;">GST</td>
+                <td class="right">₹{{ number_format($order->gst_amount, 2) }}</td>
             </tr>
+            @endif
             <tr class="total-row">
-                <td>Grand Total</td>
+                <td>Total Amount</td>
                 <td class="right">₹{{ number_format($order->total_amount, 2) }}</td>
             </tr>
         </table>

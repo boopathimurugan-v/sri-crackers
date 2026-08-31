@@ -97,43 +97,37 @@
                                     <!-- Table Header (Desktop) -->
                                     <div class="hidden md:grid grid-cols-12 gap-4 bg-gray-50 p-4 border-b border-gray-200 font-bold text-sm text-slate-600 uppercase tracking-wider">
                                         <div class="col-span-2">Image</div>
-                                        <div class="col-span-4">Product Name</div>
-                                        <div class="col-span-2 text-center">MRP</div>
-                                        <div class="col-span-2 text-center">Offer Price</div>
+                                        <div class="col-span-5">Product Name</div>
+                                        <div class="col-span-3 text-center">Price (₹)</div>
                                         <div class="col-span-2 text-center">Quantity</div>
                                     </div>
 
                                     <!-- Product Rows -->
                                     @foreach($category->products as $product)
                                         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 p-4 items-center border-b border-gray-100 last:border-0 hover:bg-pink-50/30 transition-colors">
-                                            
+
+                                            {{-- Product Image --}}
                                             <div class="col-span-1 md:col-span-2">
-                                                <div class="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden border border-gray-200 bg-white">
+                                                <div class="w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden border border-gray-200 bg-white">
                                                     <img src="{{ $product->main_image ?: $product->image_path }}" alt="{{ $product->name }}" class="w-full h-full object-cover">
-                                                    <div class="absolute top-0 left-0 bg-[#910A67] text-white text-[9px] font-black px-1.5 py-0.5 rounded-br-md">
-                                                        {{ $product->discount_percentage }}% OFF
-                                                    </div>
                                                 </div>
                                             </div>
-                                            
-                                            <div class="col-span-1 md:col-span-4 flex flex-col">
+
+                                            {{-- Product Name --}}
+                                            <div class="col-span-1 md:col-span-5 flex flex-col">
                                                 <span class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">{{ $product->brand->name ?? 'Premium' }}</span>
                                                 <h4 class="font-black text-slate-900 text-base leading-snug">
                                                     {{ $product->english_name }}@if($product->tamil_name) <span class="text-sm font-normal text-slate-500">({{ $product->tamil_name }})</span>@endif
                                                 </h4>
+                                            </div>
 
+                                            {{-- Selling Price --}}
+                                            <div class="col-span-1 md:col-span-3 text-left md:text-center">
+                                                <span class="md:hidden text-xs text-gray-500 font-bold uppercase mr-2">Price:</span>
+                                                <span class="text-xl font-black text-[#910A67]">₹{{ number_format($product->price, 2) }}</span>
                                             </div>
-                                            
-                                            <div class="col-span-1 md:col-span-2 text-left md:text-center">
-                                                <span class="md:hidden text-xs text-gray-500 font-bold uppercase mr-2">MRP:</span>
-                                                <span class="text-gray-400 font-bold line-through">₹{{ number_format($product->mrp, 2) }}</span>
-                                            </div>
-                                            
-                                            <div class="col-span-1 md:col-span-2 text-left md:text-center">
-                                                <span class="md:hidden text-xs text-gray-500 font-bold uppercase mr-2">Offer:</span>
-                                                <span class="text-xl font-black text-[#910A67]">₹{{ number_format($product->offer_price, 2) }}</span>
-                                            </div>
-                                            
+
+                                            {{-- Quantity Stepper --}}
                                             <div class="col-span-1 md:col-span-2 flex justify-start md:justify-center">
                                                 @if($product->stock > 0 && $product->is_available)
                                                     <div class="flex items-center border-2 border-[#910A67] rounded-md overflow-hidden bg-white w-28">
@@ -162,30 +156,32 @@
                             Your Order
                         </div>
                         
-                        <div class="p-6 space-y-4">
-                            <div class="flex justify-between items-center pb-4 border-b border-pink-800">
+                        <div class="p-6 space-y-3">
+                            <div class="flex justify-between items-center pb-3 border-b border-pink-800">
                                 <span class="font-bold text-pink-200">Total Items</span>
                                 <span class="font-black text-xl" x-text="cartCount"></span>
                             </div>
-                            
-                            <div class="flex justify-between items-center pb-4 border-b border-pink-800">
-                                <span class="font-bold text-pink-200">Total MRP</span>
-                                <span class="font-bold text-pink-300 line-through" x-text="`₹${totalMrp.toLocaleString('en-IN')}`"></span>
+
+                            <div class="flex justify-between items-center py-1">
+                                <span class="font-bold text-pink-200">Net Amount</span>
+                                <span class="font-bold text-white" x-text="`₹${netAmount.toLocaleString('en-IN')}`"></span>
                             </div>
 
-                            <div class="flex justify-between items-center pb-4 border-b border-pink-800">
-                                <span class="font-bold text-[#FFC000]">Total Savings</span>
-                                <span class="font-black text-[#FFC000] text-lg" x-text="`₹${totalSavings.toLocaleString('en-IN')}`"></span>
+                            <div class="flex justify-between items-center py-1">
+                                <span class="font-bold text-[#FFC000]">Discount</span>
+                                <span class="font-black text-[#FFC000]" x-text="`-₹${discountAmount.toLocaleString('en-IN')}`"></span>
                             </div>
 
-                            <div class="pt-2 pb-4">
-                                <div class="text-sm font-bold text-pink-200 uppercase tracking-widest text-center mb-1">Payable Amount</div>
-                                <div class="text-4xl font-black text-center text-white drop-shadow-md" x-text="`₹${totalPayable.toLocaleString('en-IN')}`"></div>
-                            </div>
+                            <div class="border-t-2 border-dashed border-pink-600 pt-3 mt-1">
+                                <div class="flex justify-between items-center mb-4">
+                                    <span class="text-sm font-bold text-pink-200 uppercase tracking-wider">Total Amount</span>
+                                    <span class="text-3xl font-black text-white" x-text="`₹${finalPayable.toLocaleString('en-IN')}`"></span>
+                                </div>
 
-                            <a href="#checkout" class="block w-full py-4 bg-[#FFC000] text-slate-900 text-center font-black rounded-lg uppercase tracking-widest hover:bg-[#e5ac00] transition-colors shadow-lg shadow-yellow-500/20">
-                                Checkout Now
-                            </a>
+                                <a href="{{ route('checkout') }}" class="block w-full py-4 bg-[#FFC000] text-slate-900 text-center font-black rounded-lg uppercase tracking-widest hover:bg-[#e5ac00] transition-colors shadow-lg shadow-yellow-500/20">
+                                    Checkout Now
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
